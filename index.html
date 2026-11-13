@@ -1,0 +1,86 @@
+<!doctype html>
+<!-- Copyright (C) 2026 Antoine Genitrini. SPDX-License-Identifier: GPL-3.0-only -->
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automates dynamiques</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div><span class="eyebrow" data-i18n="course">MATHÉMATIQUES DISCRÈTES · AUTOMATES FINIS</span><h1 data-i18n="title">Automates dynamiques</h1><p data-i18n="subtitle">Construire, parcourir et transformer les automates, un pas à la fois.</p></div>
+    <div class="header-actions"><button id="helpOpen" type="button" aria-haspopup="dialog" aria-controls="helpDialog" data-i18n="help">Aide</button>
+    <button id="language" type="button" aria-label="Switch to English" title="Switch to English">
+      <svg id="flagEN" class="language-flag" viewBox="0 0 60 40" aria-hidden="true"><rect width="60" height="40" fill="#012169"/><path d="M0 0 L60 40 M60 0 L0 40" stroke="#fff" stroke-width="8"/><path d="M0 0 L60 40 M60 0 L0 40" stroke="#c8102e" stroke-width="3"/><path d="M30 0 V40 M0 20 H60" stroke="#fff" stroke-width="12"/><path d="M30 0 V40 M0 20 H60" stroke="#c8102e" stroke-width="7"/></svg>
+      <svg id="flagFR" class="language-flag" viewBox="0 0 3 2" aria-hidden="true" hidden><rect width="1" height="2" fill="#002395"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#ed2939"/></svg><span id="languageText">EN</span>
+    </button></div>
+  </header>
+  <main>
+    <section class="setup" data-i18n-aria="setup" aria-label="Données et opération">
+      <div class="options">
+        <label class="operation-field"><span data-i18n="operation">Opération</span><select id="operation"></select></label>
+        <label id="alphabetField"><span data-i18n="alphabet">Alphabet</span><input id="alphabet" value="ab" autocomplete="off"><small data-i18n="alphabetHelp">Caractères, sans séparateur ; les espaces sont ignorés.</small></label>
+        <label id="wordField"><span data-i18n="word">Mot</span><input id="word" value="aaba" autocomplete="off"><small data-i18n="wordHelp">Laisser vide pour le mot vide ε.</small></label>
+        <label id="statesField"><span data-i18n="startStates">États de départ</span><input id="states" value="0 1" autocomplete="off"><small data-i18n="statesHelp">Identifiants séparés par des espaces.</small></label>
+        <label id="stateIdField"><span data-i18n="stateId">Identifiant de l’état</span><input id="stateId" value="4" inputmode="numeric" autocomplete="off"></label>
+        <label id="initialField" class="check"><input id="isInitial" type="checkbox"><span data-i18n="initial">Initial</span></label>
+        <label id="finalField" class="check"><input id="isFinal" type="checkbox"><span data-i18n="final">Final</span></label>
+        <label id="fromField"><span data-i18n="source">État source</span><input id="from" value="1" inputmode="numeric" autocomplete="off"></label>
+        <label id="symbolField"><span data-i18n="symbol">Symbole</span><input id="symbol" value="b" autocomplete="off"></label>
+        <label id="toField"><span data-i18n="destination">État destination</span><input id="to" value="3" inputmode="numeric" autocomplete="off"></label>
+      </div>
+      <p class="hint" data-i18n="automaticRun">La visualisation démarre au choix de l’opération et se met à jour lorsque vous quittez un champ modifié.</p>
+      <div class="editors">
+        <div class="editor" id="editorA">
+          <div class="editor-input"><label><span data-i18n="automatonA">Automate A</span><textarea id="autoA" spellcheck="false"></textarea></label><button id="previewButtonA" type="button" data-i18n="visualize">Visualiser</button></div>
+          <div class="preview" id="previewWrapA"><svg id="previewA" role="img" data-i18n-aria="previewA" aria-label="Aperçu de l’automate A"></svg><div class="zoom preview-zoom" role="group" data-i18n-aria="previewControlsA"><button id="previewZoomInA" type="button" data-i18n-aria="zoomIn" aria-label="Zoom avant" disabled>+</button><button id="previewZoomOutA" type="button" data-i18n-aria="zoomOut" aria-label="Zoom arrière" disabled>−</button><button id="previewResetA" type="button" data-i18n="recenter" disabled>Recentrer</button><button id="previewExpandA" type="button" aria-controls="previewWrapA" aria-expanded="false">Agrandir</button></div><p id="previewStatusA" class="preview-status" aria-live="polite"></p></div>
+        </div>
+        <div class="editor" id="editorB">
+          <div class="editor-input"><label><span data-i18n="automatonB">Automate B</span><textarea id="autoB" spellcheck="false"></textarea></label><button id="previewButtonB" type="button" data-i18n="visualize">Visualiser</button></div>
+          <div class="preview" id="previewWrapB"><svg id="previewB" role="img" data-i18n-aria="previewB" aria-label="Aperçu de l’automate B"></svg><div class="zoom preview-zoom" role="group" data-i18n-aria="previewControlsB"><button id="previewZoomInB" type="button" data-i18n-aria="zoomIn" aria-label="Zoom avant" disabled>+</button><button id="previewZoomOutB" type="button" data-i18n-aria="zoomOut" aria-label="Zoom arrière" disabled>−</button><button id="previewResetB" type="button" data-i18n="recenter" disabled>Recentrer</button><button id="previewExpandB" type="button" aria-controls="previewWrapB" aria-expanded="false">Agrandir</button></div><p id="previewStatusB" class="preview-status" aria-live="polite"></p></div>
+        </div>
+      </div>
+      <p class="hint" id="formatHint" data-i18n="format">Format du TME : #E: états, #I: initiaux, #F: finaux, #T: transitions (0 a 1). Identifiants entiers et symboles d’un caractère.</p>
+      <div id="error" role="alert"></div>
+    </section>
+    <div class="workspace" id="workspace">
+      <section class="visual-panel">
+        <div class="panel-heading"><div><span class="eyebrow" data-i18n="visualization">VISUALISATION</span><h2 id="graphTitle"></h2></div><div class="legend"><span class="initial" data-i18n="legendInitial">→ initial</span><span class="final" data-i18n="legendFinal">◎ final</span><span class="active" data-i18n="legendActive">● en cours</span><span class="pending" data-i18n="legendPending">● à traiter</span><span class="marked" data-i18n="legendMarked">◌ ensemble calculé</span></div></div>
+        <div class="graph-wrap" id="graphWrap"><svg id="graph" role="img" data-i18n-aria="graph" aria-label="Graphe de l'automate"></svg><div class="zoom"><button id="zoomIn" data-i18n-aria="zoomIn" aria-label="Zoom avant" disabled>+</button><button id="zoomOut" data-i18n-aria="zoomOut" aria-label="Zoom arrière" disabled>−</button><button id="zoomReset" data-i18n="recenter" disabled>Recentrer</button><button id="relayout" data-i18n="relayout" disabled>Réorganiser</button><button id="graphExpand" type="button" aria-controls="graphWrap" aria-expanded="false">Agrandir</button></div><p class="drag-hint" data-i18n="dragHint">Glisser un état pour le déplacer, glisser le fond pour déplacer la vue, molette pour zoomer.</p></div>
+        <section id="partitionPanel" class="partition-panel" aria-labelledby="partitionTitle" hidden>
+          <h3 id="partitionTitle" data-i18n="partitionTitle">Partition courante</h3>
+          <div id="partitionList" class="partition-list"></div>
+          <div id="signaturePanel" hidden>
+            <p data-i18n="partitionHint">Deux états restent dans la même classe si leurs signatures sont identiques.</p>
+            <div class="signature-scroll"><table><thead><tr><th scope="col" data-i18n="signatureState">État</th><th scope="col" data-i18n="signatureClass">Classe</th><th scope="col" data-i18n="signatureLabel">Signature</th><th scope="col" data-i18n="signatureNext">Nouvelle classe</th></tr></thead><tbody id="signatureRows"></tbody></table></div>
+          </div>
+        </section>
+        <section id="executionPanel" class="executions" aria-labelledby="executionTitle" hidden>
+          <h3 id="executionTitle" data-i18n="executionPaths">Exécutions</h3>
+          <p id="executionProgress"></p>
+          <p id="executionWarning" class="execution-warning" hidden></p>
+          <ul id="executionList"></ul>
+          <p id="executionEmpty" data-i18n="noInitialExecution" hidden>Aucune exécution : l’automate n’a pas d’état initial.</p>
+        </section>
+        <div class="message" id="message" aria-live="polite"></div>
+        <div class="player">
+          <button id="first" data-i18n-aria="first" title="Première étape" aria-label="Première étape" disabled>|◀</button><button id="prev" data-i18n-aria="prev" title="Étape précédente" aria-label="Étape précédente" disabled>◀</button><button id="play" title="Lecture" aria-label="Lecture" disabled>▶</button><button id="next" data-i18n-aria="next" title="Étape suivante" aria-label="Étape suivante" disabled>▶</button><button id="last" data-i18n-aria="last" title="Dernière étape" aria-label="Dernière étape" disabled>▶|</button>
+          <input id="timeline" type="range" min="0" max="0" value="0" data-i18n-aria="timeline" aria-label="Position dans les étapes" disabled>
+          <span id="counter"></span><label><span data-i18n="speed">Vitesse</span><input id="speed" type="range" min="1" max="10" value="5"></label>
+        </div><div class="reuse"><button id="useResult" data-i18n="useResult" hidden>Utiliser le résultat comme automate A</button><small id="reuseHint" data-i18n="reuseHint" hidden>Les états sont renumérotés pour respecter le format du TME.</small></div>
+      </section>
+      <aside class="code-panel"><span class="eyebrow" data-i18n="execution">EXÉCUTION</span><h2 data-i18n="pseudocode">Pseudo-code</h2>
+        <p class="stack-title"><span data-i18n="callStack">Algorithmes en cours</span> : <span id="callStack"></span></p>
+        <h3 id="listingTitle" class="listing-title"></h3><ol id="code"></ol>
+        <h3 data-i18n="log">Journal des étapes</h3><div id="log"></div></aside>
+    </div>
+  </main>
+  <footer data-i18n="footer">© 2026 Antoine Genitrini · GPL v3 · Inspiré du cours de mathématiques discrètes de Sorbonne Université.</footer>
+  <dialog id="helpDialog" aria-labelledby="helpTitle">
+    <div class="help-heading"><h2 id="helpTitle" data-i18n="helpTitle">Aide et documentation</h2><button id="helpClose" type="button" data-i18n="close">Fermer</button></div>
+    <div id="helpContent" class="help-content" lang="fr"></div>
+  </dialog>
+  <script src="pseudo.js"></script><script src="automata.js"></script><script src="layout.js"></script><script src="i18n.js"></script><script src="help-content.js"></script><script src="app.js"></script>
+</body>
+</html>
