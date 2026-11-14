@@ -70,8 +70,11 @@ field empty to test ε.
 ## Using the interface
 
 1. Choose an operation: its visualization starts automatically.
-2. Edit automaton A and, if the operation requires it, automaton B.
-   **Visualize** draws the entered automaton in the preview on the right.
+2. Edit automaton A and, if the operation requires it, automaton B, either in
+   the text area (**Visualize** draws the entered automaton in the preview on
+   the right) or directly in the graphical preview using **+ State** and
+   **+ Transition** and clicking any state or transition to edit its label
+   (every graphical change updates the text editor).
 3. Fill in the operation-specific fields. The visualization is recomputed when
    you leave an edited field; a checkbox takes effect immediately.
 4. Use the player or select a log entry to examine a step; the message, the
@@ -118,11 +121,18 @@ of states represented by the current state of the determinization).
 
 ### Additional panels
 
-- **Runs** (word recognition): runs appear as `0 ─a→ 1 ─b→ 2`, with blocked
-  branches and, once the word has been read, accepting runs.
-- **Current partition** (minimization): the classes and, for each state, its
-  signature (its class and the class reached by each letter). Two states stay
-  in the same class exactly when their signatures match.
+- **Reference automata and tables**: during transformations and tests
+  (determinization, product, completion, complement, concatenation, closure,
+  minimization), the initial automaton stays displayed beside the construction
+  with its relevant states and transitions highlighted, along with the step-by-step
+  table.
+- **Runs** (word recognition): a reading ribbon tracks the word letter by letter
+  and runs appear as `0 ─a→ 1 ─b→ 2`, with blocked branches and, once the word
+  has been read, accepting runs.
+- **Current partition** (minimization): the current classes, their refinement
+  history and, for each state, its signature (its class and the class reached by
+  each letter). Two states stay in the same class exactly when their signatures
+  match.
 
 After a construction or transformation, **Use result as automaton A** copies
 the resulting automaton into field A. Its states are renumbered to match the

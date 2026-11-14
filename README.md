@@ -72,8 +72,11 @@ Pour la reconnaissance, laisser le champ « Mot » vide pour tester ε.
 ## Utilisation de l'interface
 
 1. Choisir une opération : sa visualisation démarre automatiquement.
-2. Modifier l'automate A et, si l'opération le demande, l'automate B.
-   **Visualiser** dessine l'automate saisi dans l'aperçu à droite.
+2. Modifier l'automate A et, si l'opération le demande, l'automate B, soit dans
+   le champ texte (**Visualiser** dessine l'automate saisi dans l'aperçu à droite),
+   soit directement dans l'aperçu graphique grâce aux boutons **+ État** et
+   **+ Transition** et en cliquant sur un état ou une transition pour modifier
+   son étiquette (chaque modification met à jour le texte).
 3. Remplir les champs propres à l'opération. La visualisation est recalculée
    lorsque l'on quitte un champ modifié ; une case à cocher agit immédiatement.
 4. Utiliser le lecteur ou sélectionner une entrée du journal pour examiner une
@@ -124,12 +127,18 @@ représenté par l'état en cours de la déterminisation).
 
 ### Panneaux complémentaires
 
-- **Exécutions** (reconnaissance d'un mot) : les exécutions apparaissent sous
-  la forme `0 ─a→ 1 ─b→ 2`, avec les branches bloquées puis, après lecture
-  complète, les exécutions acceptantes.
-- **Partition courante** (minimisation) : les classes et, pour chaque état, sa
-  signature (sa classe et la classe atteinte par chaque lettre). Deux états
-  restent dans la même classe exactement quand leurs signatures coïncident.
+- **Automates de référence et tables** : pendant les transformations et tests
+  (déterminisation, produit, complétion, complémentaire, concaténation, itération,
+  minimisation), l'automate initial reste affiché à côté de la construction avec
+  ses états et transitions mis en évidence, accompagné de la table construite pas
+  à pas.
+- **Exécutions** (reconnaissance d'un mot) : un ruban de lecture affiche le mot
+  lettre par lettre et les exécutions apparaissent sous la forme `0 ─a→ 1 ─b→ 2`,
+  avec les branches bloquées puis, après lecture complète, les exécutions acceptantes.
+- **Partition courante** (minimisation) : les classes successives, leur historique
+  et, pour chaque état, sa signature (sa classe et la classe atteinte par chaque
+  lettre). Deux états restent dans la même classe exactement quand leurs signatures
+  coïncident.
 
 Après une construction ou une transformation, **Utiliser le résultat comme
 automate A** copie l'automate obtenu dans le champ A. Ses états sont
