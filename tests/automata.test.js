@@ -3,7 +3,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const Pseudo = require('../pseudo.js');
-const { parse, run, operations, wordAccepted, toText } = require('../automata.js');
+const { parse, run, operations, wordAccepted, toText, toEditorText } = require('../automata.js');
 const i18n = require('../i18n.js');
 
 const words = [''];
@@ -130,4 +130,59 @@ test('erreurs de saisie', () => {
     ['star', { a: parse('#E:\n#I:\n#F:\n#T:') }, 'err.nextIdEmpty']
   ];
   for (const [op, extra, key] of cases) assert.throws(() => run(op, { a, ...extra }), error => error.key === key, op);
+});
+
+test('toEditorText conserve les identifiants entiers sans renuméroter', () => {
+  const g = parse('#E: 0 2 5\n#I: 2\n#F: 5\n#T: (2 a 5)');
+  assert.equal(toEditorText(g), '#E: 0 2 5\n#I: 2\n#F: 5\n#T: (2 a 5)');
+  assert.deepEqual(parse(toEditorText(g)), g);
+  assert.equal(toText(g), '#E: 0 1 2\n#I: 1\n#F: 2\n#T: (1 a 2)');
+});
+
+test('les étapes exposent les données du tableau noir (ref, board, historique de partition)', () => {
+  const det = run('determinize', { a: course });
+  const detLast = det.frames.at(-1);
+  assert.ok(detLast.ref && detLast.ref.A && detLast.ref.A.graph.states.length === 4);
+  assert.equal(detLast.board.kind, 'detTable');
+  assert.ok(detLast.board.rows.length > 0);
+
+  for (const op of ['intersection', 'union']) {
+    const res = run(op, { a: course, b: auto2 });
+    const last = res.frames.at(-1);
+    assert.ok(last.ref && last.ref.A && last.ref.B, op);
+    assert.equal(last.board.kind, 'prodTable', op);
+    assert.ok(last.board.rows.length > 0, op);
+  }
+
+  const comp = run('complete', { a: course, alphabet: 'ab' });
+  assert.ok(comp.frames.at(-1).ref && comp.frames.at(-1).ref.A);
+  assert.equal(comp.frames.at(-1).board.kind, 'compTable');
+
+  const compl = run('complement', { a: auto2, alphabet: 'ab' });
+  assert.ok(compl.frames.at(-1).ref && compl.frames.at(-1).ref.A);
+  assert.equal(compl.frames.at(-1).board.kind, 'complTable');
+
+  for (const op of ['concat', 'plus', 'star']) {
+    const res = run(op, { a: course, b: auto2 });
+    assert.ok(res.frames.some(f => f.ref && f.ref.A), op);
+    assert.ok(res.frames.some(f => f.board && f.board.kind === 'junctionTable'), op);
+  }
+
+  const acc = run('accept', { a: course, word: 'aaa' });
+  assert.equal(acc.frames.at(-1).board.kind, 'wordRibbon');
+  assert.equal(acc.frames.at(-1).board.accepted, true);
+
+  const succ = run('successors', { a: course, states: ['0'], symbol: 'a' });
+  assert.equal(succ.frames.at(-1).board.kind, 'succTable');
+
+  for (const op of ['deterministic', 'completeTest']) {
+    const res = run(op, { a: course, alphabet: 'ab' });
+    assert.equal(res.frames.at(-1).board.kind, 'checkTable', op);
+  }
+
+  const min = run('minimize', { a: course, alphabet: 'ab' });
+  const quotFrames = min.frames.filter(f => f.listing === 'quotient');
+  assert.ok(quotFrames.length > 0);
+  assert.ok(quotFrames[0].partition && Array.isArray(quotFrames[0].partition.history) && quotFrames[0].partition.history.length >= 1);
+  assert.ok(quotFrames[0].ref && quotFrames[0].ref.A && quotFrames[0].ref.A.groups);
 });
