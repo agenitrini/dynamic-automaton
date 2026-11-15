@@ -254,9 +254,9 @@ du corrigé du TME.
 
 ## Auteur et licence
 
-Auteur : **Antoine Genitrini**.
+Auteur : **Amaury Curiel & Antoine Genitrini**.
 
-Copyright © 2026 Antoine Genitrini.
+Copyright © 2026 Amaury Curiel & Antoine Genitrini.
 
 Ce logiciel est distribué sous la **GNU General Public License, version 3**
 uniquement (SPDX : `GPL-3.0-only`). Il est fourni sans garantie ; voir le texte

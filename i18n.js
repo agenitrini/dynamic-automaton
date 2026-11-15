@@ -1,4 +1,4 @@
-/* Copyright (C) 2026 Antoine Genitrini. SPDX-License-Identifier: GPL-3.0-only */
+/* Copyright (C) 2026 Amaury Curiel & Antoine Genitrini. SPDX-License-Identifier: GPL-3.0-only */
 /* Textes de l'interface et messages des étapes (clés + paramètres {nom}). */
 (function (root) {
   'use strict';

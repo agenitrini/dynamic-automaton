@@ -1,4 +1,4 @@
-/* Copyright (C) 2026 Antoine Genitrini. SPDX-License-Identifier: GPL-3.0-only */
+/* Copyright (C) 2026 Amaury Curiel & Antoine Genitrini. SPDX-License-Identifier: GPL-3.0-only */
 'use strict';
 const test = require('node:test');
 const assert = require('node:assert/strict');

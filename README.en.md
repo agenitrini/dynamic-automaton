@@ -245,9 +245,9 @@ automata, and several behaviors of the model solution.
 
 ## Author and license
 
-Author: **Antoine Genitrini**.
+Author: **Amaury Curiel & Antoine Genitrini**.
 
-Copyright © 2026 Antoine Genitrini.
+Copyright © 2026 Amaury Curiel & Antoine Genitrini.
 
 This software is distributed under the **GNU General Public License, version
 3** only (SPDX: `GPL-3.0-only`). It is provided without warranty; see the full

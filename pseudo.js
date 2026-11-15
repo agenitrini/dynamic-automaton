@@ -1,4 +1,4 @@
-/* Copyright (C) 2026 Antoine Genitrini. SPDX-License-Identifier: GPL-3.0-only */
+/* Copyright (C) 2026 Amaury Curiel & Antoine Genitrini. SPDX-License-Identifier: GPL-3.0-only */
 /*
  * Pseudo-code affiché pendant l'exécution : volontairement par grandes étapes,
  * pour ne pas donner le code Python à écrire en TME.

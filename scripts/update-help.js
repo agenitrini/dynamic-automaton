@@ -1,4 +1,4 @@
-/* Copyright (C) 2026 Antoine Genitrini. SPDX-License-Identifier: GPL-3.0-only */
+/* Copyright (C) 2026 Amaury Curiel & Antoine Genitrini. SPDX-License-Identifier: GPL-3.0-only */
 'use strict';
 const fs = require('node:fs');
 const path = require('node:path');
@@ -79,7 +79,7 @@ function render(markdown) {
 }
 function generated(readmes) {
   const contents = { fr: render(readmes.fr), en: render(readmes.en) };
-  return `/* Copyright (C) 2026 Antoine Genitrini. SPDX-License-Identifier: GPL-3.0-only */\n/* Généré depuis les README par scripts/update-help.js. */\n'use strict';\nconst ReadmeHelp = ${JSON.stringify(contents)};\n`;
+  return `/* Copyright (C) 2026 Amaury Curiel & Antoine Genitrini. SPDX-License-Identifier: GPL-3.0-only */\n/* Généré depuis les README par scripts/update-help.js. */\n'use strict';\nconst ReadmeHelp = ${JSON.stringify(contents)};\n`;
 }
 if (require.main === module) {
   const readmes = {

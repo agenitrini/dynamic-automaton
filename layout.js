@@ -1,4 +1,4 @@
-/* Copyright (C) 2026 Antoine Genitrini. SPDX-License-Identifier: GPL-3.0-only */
+/* Copyright (C) 2026 Amaury Curiel & Antoine Genitrini. SPDX-License-Identifier: GPL-3.0-only */
 /*
  * Mise en page des automates : placement en couches de gauche à droite
  * (distance depuis les états initiaux, comme Graphviz avec rankdir=LR),

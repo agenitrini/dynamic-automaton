@@ -1,4 +1,4 @@
-/* Copyright (C) 2026 Antoine Genitrini. SPDX-License-Identifier: GPL-3.0-only */
+/* Copyright (C) 2026 Amaury Curiel & Antoine Genitrini. SPDX-License-Identifier: GPL-3.0-only */
 /*
  * Moteur des automates : lecture du format du TME et exécution tracée des
  * algorithmes du TME (même comportement que le corrigé). Chaque étape
