@@ -71,7 +71,7 @@ Pour la reconnaissance, laisser le champ « Mot » vide pour tester ε.
 
 ## Utilisation de l'interface
 
-Le menu **Exemple du cours** charge l'un des exemples présentés en cours :
+Le menu **Exemples du cours** charge l'un des exemples présentés en cours :
 il remplit les automates, l'alphabet ou le mot, choisit l'opération et lance
 la visualisation, en affichant une courte explication. Les exemples portent
 sur le complémentaire (pourquoi l'automate doit être complet et déterministe,

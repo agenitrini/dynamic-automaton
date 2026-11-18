@@ -69,7 +69,7 @@ field empty to test ε.
 
 ## Using the interface
 
-The **Course example** menu loads one of the examples presented in class: it
+The **Course examples** menu loads one of the examples presented in class: it
 fills in the automata, the alphabet or the word, selects the operation and
 starts the visualization, showing a short explanation. The examples cover the
 complement (why the automaton must be complete and deterministic, including
