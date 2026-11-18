@@ -41,7 +41,7 @@ textarea, input, select { font: inherit; color: var(--ink); background: white; b
 textarea { resize: vertical; font: 13px/1.5 ui-monospace, monospace; min-height: 105px; }
 textarea:focus, input:focus, select:focus, button:focus-visible { outline: 2px solid #8b81f0; outline-offset: 1px; }
 .hint, small { color: var(--muted); font-weight: 400; font-size: 12px; }
-.hint { margin: 8px 0 14px; } .options { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; } .operation-field { max-width: 360px; } .options .example-field { flex: 2; max-width: 520px; } #example { text-overflow: ellipsis; }
+.hint { margin: 8px 0 14px; } .options { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; } .options .operation-field, .options .example-field { flex: 1.5; max-width: 460px; } #example { text-overflow: ellipsis; }
 .example-note { margin: 10px 0 0; padding: 8px 12px; border-left: 3px solid var(--accent); background: #f5f3ff; border-radius: 4px; }
 .editors { margin-top: 4px; }
 .options label { min-width: 150px; flex: 1; } .options label:first-child { flex: 1.5; } .options small { max-width: 230px; }

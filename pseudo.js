@@ -129,7 +129,7 @@
         ['pour chaque état initial p de A et q de B : créer l’état (p, q)', 'for each initial state p of A and q of B: create state (p, q)', 'm.A m.ini0 m.ini1 m.next m.s m.add m.append'],
         ['pour chaque couple (p, q) créé et pas encore traité', 'for each created pair (p, q) not yet processed', 'm.alpha m.call r.test r.s1 r.T1 r.dejaVus r.rec'],
         ['  pour chaque lettre a, chaque p –a→ p′ dans A et q –a→ q′ dans B', '  for each letter a, each p –a→ p′ in A and q –a→ q′ in B', 'r.T1a'],
-        ['    créer (p′, q′) s’il est nouveau (final si p′ et q′ sont finals)', '    create (p′, q′) if it is new (final if p′ and q′ are final)', 'r.new r.s2 r.add r.append r.old'],
+        ['    créer (p′, q′) s’il est nouveau (final si p′ et q′ sont finaux)', '    create (p′, q′) if it is new (final if p′ and q′ are final)', 'r.new r.s2 r.add r.append r.old'],
         ['    ajouter la transition (p, q) –a→ (p′, q′)', '    add the transition (p, q) –a→ (p′, q′)', 'r.addT1 r.addT2'],
         ['renvoyer l’automate produit', 'return the product automaton', 'r.ret']
       ]
@@ -154,7 +154,7 @@
         ['pour chaque transition p –a→ f de A vers un état final f', 'for each transition p –a→ f of A to a final state f', 'm.fin1 m.init2 m.trans m.jonction m.s'],
         ['  ajouter p –a→ i pour chaque état initial i de B', '  add p –a→ i for each initial state i of B', 'm.add'],
         ['si A ne reconnaît pas ε : les initiaux de B ne sont plus initiaux', 'if A does not accept ε: the initial states of B are no longer initial', 'm.notB m.noInit'],
-        ['les états finals de A ne sont plus finals', 'the final states of A are no longer final', 'm.noFin'],
+        ['les états finaux de A ne sont plus finaux', 'the final states of A are no longer final', 'm.noFin'],
         ['renvoyer l’automate obtenu', 'return the resulting automaton', 'm.ret']
       ]
     },
@@ -179,7 +179,7 @@
       title: ['Minimisation (algorithme de Moore)', 'Minimization (Moore’s algorithm)'], fns: { m: 'minimisation' },
       lines: [
         ['déterminiser puis compléter l’automate', 'determinize then complete the automaton', 'm.det m.comp'],
-        ['partition initiale : états finals / non finals', 'initial partition: final / non-final states', 'm.init m.nb'],
+        ['partition initiale : états finaux / non finaux', 'initial partition: final / non-final states', 'm.init m.nb'],
         ['répéter', 'repeat', 'm.while'],
         ['  signature de q : sa classe et la classe de son successeur par chaque lettre', '  signature of q: its class and the class of its successor on each letter', 'm.sig'],
         ['  nouvelles classes : une par signature distincte', '  new classes: one per distinct signature', 'm.num m.new'],

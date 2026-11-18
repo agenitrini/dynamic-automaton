@@ -75,7 +75,7 @@ Le menu **Exemple du cours** charge l'un des exemples présentés en cours :
 il remplit les automates, l'alphabet ou le mot, choisit l'opération et lance
 la visualisation, en affichant une courte explication. Les exemples portent
 sur le complémentaire (pourquoi l'automate doit être complet et déterministe,
-avec les pièges de l'inversion naïve des états finals), la déterminisation et
+avec les pièges du calcul naïf du complémentaire), la déterminisation et
 l'intersection (dont les multiples de 2 et de 3 écrits en binaire).
 
 1. Choisir une opération : sa visualisation démarre automatiquement.
@@ -110,7 +110,7 @@ pseudo-code affiché est celui de l'algorithme appelé.
 - l'**orange** désigne l'état ou la transition en cours de traitement ;
 - le **bleu** désigne les états qui restent à traiter ;
 - un **anneau vert pointillé** entoure un ensemble d'états calculé (successeurs,
-  états finals, états déjà vus…) ;
+  états finaux, états déjà vus…) ;
 - pendant la minimisation, les couleurs de fond repèrent les classes.
 
 Les états sont placés **de gauche à droite** selon leur distance aux états
@@ -179,7 +179,7 @@ l'étoile).
 |---|---|
 | Compléter | Si l'automate n'est pas complet : état puits `bot`, puis ajout des transitions manquantes, lettre par lettre |
 | Déterminiser | Construction des sous-ensembles accessibles |
-| Complémentaire | Déterminisation si nécessaire, complétion si nécessaire, échange des états finals et non finals |
+| Complémentaire | Déterminisation si nécessaire, complétion si nécessaire, échange des états finaux et non finaux |
 | Intersection | Produit des automates A et B (éventuellement non déterministes) ; les deux composantes doivent être finales |
 | Union | Complétion des deux automates, puis produit ; une composante finale suffit |
 | Concaténation | Copies de A et B, transitions de jonction, sans transitions ε |
