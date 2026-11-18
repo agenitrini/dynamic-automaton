@@ -69,6 +69,13 @@ field empty to test ε.
 
 ## Using the interface
 
+The **Course example** menu loads one of the examples presented in class: it
+fills in the automata, the alphabet or the word, selects the operation and
+starts the visualization, showing a short explanation. The examples cover the
+complement (why the automaton must be complete and deterministic, including
+the pitfalls of naively swapping final states), determinization and
+intersection (including multiples of 2 and 3 written in binary).
+
 1. Choose an operation: its visualization starts automatically.
 2. Edit automaton A and, if the operation requires it, automaton B, either in
    the text area (**Visualize** draws the entered automaton in the preview on
@@ -209,6 +216,7 @@ pseudo.js                Bilingual pseudocode shown during execution
 layout.js                Layered placement, arcs and labels
 app.js                   Animated SVG rendering, player and interactions
 i18n.js                  Interface texts and step messages (French and English)
+examples.js              Bank of course examples (automata, operation, explanation)
 README.en.md             This English documentation
 help-content.js          Built-in bilingual documentation for offline use
 scripts/update-help.js   Generates help from the README files
@@ -216,6 +224,7 @@ tests/automata.test.js   Algorithm tests with Node.js
 tests/layout.test.js     Layout tests
 tests/i18n.test.js       Translation and pseudocode tests
 tests/help.test.js       Checks help content and synchronization
+tests/examples.test.js   Checks the course examples
 LICENSE                  Full license text
 ```
 

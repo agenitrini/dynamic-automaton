@@ -71,6 +71,13 @@ Pour la reconnaissance, laisser le champ « Mot » vide pour tester ε.
 
 ## Utilisation de l'interface
 
+Le menu **Exemple du cours** charge l'un des exemples présentés en cours :
+il remplit les automates, l'alphabet ou le mot, choisit l'opération et lance
+la visualisation, en affichant une courte explication. Les exemples portent
+sur le complémentaire (pourquoi l'automate doit être complet et déterministe,
+avec les pièges de l'inversion naïve des états finals), la déterminisation et
+l'intersection (dont les multiples de 2 et de 3 écrits en binaire).
+
 1. Choisir une opération : sa visualisation démarre automatiquement.
 2. Modifier l'automate A et, si l'opération le demande, l'automate B, soit dans
    le champ texte (**Visualiser** dessine l'automate saisi dans l'aperçu à droite),
@@ -215,6 +222,7 @@ pseudo.js                Pseudo-code bilingue affiché pendant l'exécution
 layout.js                Placement en couches, tracé des arcs et des étiquettes
 app.js                   Rendu SVG animé, lecteur et interactions
 i18n.js                  Textes de l'interface et messages des étapes (français et anglais)
+examples.js              Banque d'exemples du cours (automates, opération, explication)
 README.en.md             Traduction anglaise de cette documentation
 help-content.js          Documentation bilingue intégrée pour l'utilisation hors ligne
 scripts/update-help.js   Génération de l'aide depuis le README
@@ -222,6 +230,7 @@ tests/automata.test.js   Tests des algorithmes avec Node.js
 tests/layout.test.js     Tests de la mise en page
 tests/i18n.test.js       Tests des traductions et du pseudo-code
 tests/help.test.js       Vérification de l'aide et de sa synchronisation
+tests/examples.test.js   Vérification des exemples du cours
 LICENSE                  Texte intégral de la licence
 ```
 

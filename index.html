@@ -19,6 +19,7 @@
   <main>
     <section class="setup" data-i18n-aria="setup" aria-label="Données et opération">
       <div class="options">
+        <label class="example-field"><span data-i18n="example">Exemple du cours</span><select id="example"></select></label>
         <label class="operation-field"><span data-i18n="operation">Opération</span><select id="operation"></select></label>
         <label id="alphabetField"><span data-i18n="alphabet">Alphabet</span><input id="alphabet" value="ab" autocomplete="off"><small data-i18n="alphabetHelp">Caractères, sans séparateur ; les espaces sont ignorés.</small></label>
         <label id="wordField"><span data-i18n="word">Mot</span><input id="word" value="aaba" autocomplete="off"><small data-i18n="wordHelp">Laisser vide pour le mot vide ε.</small></label>
@@ -30,6 +31,7 @@
         <label id="symbolField"><span data-i18n="symbol">Symbole</span><input id="symbol" value="b" autocomplete="off"></label>
         <label id="toField"><span data-i18n="destination">État destination</span><input id="to" value="3" inputmode="numeric" autocomplete="off"></label>
       </div>
+      <p class="example-note" id="exampleNote" hidden></p>
       <p class="hint" data-i18n="automaticRun">La visualisation démarre au choix de l’opération et se met à jour lorsque vous quittez un champ modifié.</p>
       <div class="editors">
         <div class="editor" id="editorA">
@@ -99,6 +101,6 @@
     <div class="help-heading"><h2 id="helpTitle" data-i18n="helpTitle">Aide et documentation</h2><button id="helpClose" type="button" data-i18n="close">Fermer</button></div>
     <div id="helpContent" class="help-content" lang="fr"></div>
   </dialog>
-  <script src="pseudo.js"></script><script src="automata.js"></script><script src="layout.js"></script><script src="i18n.js"></script><script src="help-content.js"></script><script src="app.js"></script>
+  <script src="pseudo.js"></script><script src="automata.js"></script><script src="layout.js"></script><script src="i18n.js"></script><script src="help-content.js"></script><script src="examples.js"></script><script src="app.js"></script>
 </body>
 </html>

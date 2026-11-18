@@ -3,7 +3,7 @@
   'use strict';
   const $ = id => document.getElementById(id);
   const NS = 'http://www.w3.org/2000/svg';
-  const Layout = AutomataLayout, I18N = AutomataI18n, Pseudo = AutomataPseudo;
+  const Layout = AutomataLayout, I18N = AutomataI18n, Pseudo = AutomataPseudo, Examples = AutomataExamples;
   const partitionColors = ['#fee2e2', '#dcfce7', '#dbeafe', '#fef3c7', '#ede9fe', '#cffafe', '#ffedd5', '#fce7f3', '#e2e8f0', '#ecfccb'];
   const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -723,6 +723,39 @@
     }
     select.value = value;
   }
+  function populateExamples() {
+    const select = $('example'), value = select.value, li = lang === 'en' ? 1 : 0;
+    select.replaceChildren();
+    const placeholder = new Option(text('chooseExample'), '');
+    placeholder.disabled = true; select.appendChild(placeholder);
+    const groups = new Map();
+    for (const ex of Examples.examples) {
+      if (!groups.has(ex.group)) { const g = document.createElement('optgroup'); g.label = Examples.groups[ex.group][li]; groups.set(ex.group, g); select.appendChild(g); }
+      groups.get(ex.group).appendChild(new Option(ex.title[li], ex.id));
+    }
+    select.value = value;
+    showExampleNote();
+  }
+  function showExampleNote() {
+    const ex = Examples.examples.find(e => e.id === $('example').value);
+    $('exampleNote').hidden = !ex;
+    $('exampleNote').textContent = ex ? ex.note[lang === 'en' ? 1 : 0] : '';
+  }
+  function loadExample(id) {
+    const ex = Examples.examples.find(e => e.id === id);
+    if (!ex) return;
+    for (const which of ['A', 'B']) { closePopover(which); setTransMode(which, false); }
+    $('autoA').value = ex.a;
+    if (ex.b) $('autoB').value = ex.b;
+    if (ex.alphabet !== undefined) $('alphabet').value = ex.alphabet;
+    if (ex.word !== undefined) $('word').value = ex.word;
+    $('operation').value = ex.op;
+    messageOverride = null;
+    showExampleNote();
+    showFields();
+    showPreview('A'); if (ex.b) showPreview('B');
+    launch();
+  }
   function showFields() {
     const op = $('operation').value, meta = Automata.operations[op] || { fields: [] }, has = f => meta.fields.includes(f);
     $('editorB').hidden = !has('B');
@@ -1141,6 +1174,7 @@
       if (node.hasAttribute('title')) node.title = label;
     });
     populateOperations();
+    populateExamples();
     $('languageText').textContent = lang === 'fr' ? 'EN' : 'FR';
     $('flagEN').toggleAttribute('hidden', lang !== 'fr');
     $('flagFR').toggleAttribute('hidden', lang !== 'en');
@@ -1163,6 +1197,7 @@
    * Événements
    * --------------------------------------------------------------- */
   $('operation').addEventListener('change', () => { showFields(); launch(); });
+  $('example').addEventListener('change', event => loadExample(event.target.value));
   for (const id of ['autoA', 'autoB', 'alphabet', 'word', 'states', 'symbol', 'stateId', 'isInitial', 'isFinal', 'from', 'to']) {
     $(id).addEventListener('change', () => {
       const op = $('operation').value;
@@ -1248,6 +1283,7 @@
 
   applyLanguage();
   $('operation').value = '';
+  $('example').value = '';
   showFields();
   showPreview('A'); showPreview('B');
 })();
