@@ -71,7 +71,10 @@ field empty to test ε.
 
 The **Course examples** menu loads one of the examples presented in class: it
 fills in the automata, the alphabet or the word, selects the operation and
-starts the visualization, showing a short explanation. The examples cover the
+starts the visualization. A **Why this example?** window then explains what it
+illustrates; once closed (**Got it**, <kbd>Esc</kbd> or a click elsewhere), the
+explanation remains available in the collapsible **Course note** line below the
+menus. The examples cover the
 complement (why the automaton must be complete and deterministic, including
 the pitfalls of naively swapping final states), determinization and
 intersection (including multiples of 2 and 3 written in binary).
@@ -79,26 +82,40 @@ intersection (including multiples of 2 and 3 written in binary).
 1. Choose an operation: its visualization starts automatically.
 2. Edit automaton A and, if the operation requires it, automaton B, either in
    the text area (**Visualize** draws the entered automaton in the preview on
-   the right) or directly in the graphical preview using **+ State** and
-   **+ Transition** and clicking any state or transition to edit its label
-   (every graphical change updates the text editor).
+   the right) or directly in the graphical preview using the **Add a state** and
+   **Add a transition** buttons of its toolbar and clicking any state or
+   transition to edit its label (every graphical change updates the text editor).
 3. Fill in the operation-specific fields. The visualization is recomputed when
    you leave an edited field; a checkbox takes effect immediately.
 4. Use the player or select a log entry to examine a step; the message, the
    pseudocode line and the graph are synchronized.
 
+Instructions (TME format, alphabet, word…) are gathered in the small **?**
+buttons next to the fields: their text appears on hover or keyboard focus.
+
+As soon as an operation or an example is chosen, the input area **collapses**
+into a single line: the operation, the example and a summary of the input
+(number of states and transitions of A and B, alphabet, word…). Clicking an
+item of the summary or **Edit input** reopens the full input area; **Collapse
+input** closes it again. The original automata remain visible in the
+visualization.
+
 The player provides first and last step, previous and next step, play/pause,
-timeline navigation and speed control. When focus is not in a field or button,
+timeline navigation and speed control (⏱). The message of the current step is
+shown just above it. When focus is not in a field or button,
 <kbd>Space</kbd>, <kbd>←</kbd> and <kbd>→</kbd> control playback.
 
 ### Pseudocode
 
-The right-hand panel presents the algorithm **as broad steps**, in English or
+The right-hand panel has two tabs: **Pseudocode** and **Log** (the list of all
+steps, each one clickable). The Pseudocode tab presents the algorithm **as
+broad steps**, in English or
 French, and highlights the current step. It deliberately does not reproduce
 the Python code of the practical, which students must write themselves. When
 an algorithm uses another one (for instance the complement, which determinizes
 then completes), the **Running algorithms** line shows the sequence and the
-displayed pseudocode is that of the called algorithm.
+displayed pseudocode is that of the called algorithm. Below the pseudocode, the
+two **previous steps** of the log recall what just happened.
 
 ### Graph
 
@@ -108,6 +125,9 @@ displayed pseudocode is that of the called algorithm.
 - a **dashed green ring** surrounds a computed set of states (successors, final
   states, states already seen…);
 - during minimization, background colors identify the classes.
+
+The legend, at the bottom of the graph, only lists the marks used by the
+current operation.
 
 States are placed **from left to right** according to their distance from the
 initial states, as Graphviz does in the notebook. Each state's position is
@@ -120,8 +140,10 @@ the details appear on hover).
 
 You can **drag a state** to improve the drawing; the new position is kept for
 the whole visualization. **Rearrange** restores the computed layout. The wheel
-and the `+` / `−` buttons zoom, dragging the background pans the view and
-**Reset view** restores the framing. **Enlarge** gives the graph more room. The
+and the zoom buttons zoom, dragging the background pans the view and
+**Reset view** restores the framing. **Enlarge** gives the graph more room.
+These controls are icons in the corner of each graph (each name appears on
+hover); on the reference automata they only appear on hover. The
 previews of A and B follow the same rules and, during a construction,
 highlight the relevant states of the original automaton (for instance the set
 of states represented by the current state of the determinization).
@@ -141,8 +163,8 @@ of states represented by the current state of the determinization).
   each letter). Two states stay in the same class exactly when their signatures
   match.
 
-After a construction or transformation, **Use result as automaton A** copies
-the resulting automaton into field A. Its states are renumbered to match the
+After a construction or transformation, the **Use as A** button, which appears
+at the last step, copies the resulting automaton into field A. Its states are renumbered to match the
 input format; you must then choose the next operation, even if it is the same
 one. An input error is displayed and the previous visualization remains
 visible.

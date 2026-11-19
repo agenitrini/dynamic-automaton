@@ -17,51 +17,67 @@
     </button></div>
   </header>
   <main>
-    <section class="setup" data-i18n-aria="setup" aria-label="Données et opération">
+    <section class="setup" id="setup" data-i18n-aria="setup" aria-label="Données et opération">
       <div class="options">
-        <label class="operation-field"><span data-i18n="operation">Opération</span><select id="operation"></select></label>
+        <label class="operation-field"><span><span data-i18n="operation">Opération</span> <span class="info" tabindex="0" role="img" data-i18n-tip="automaticRun">?</span></span><select id="operation"></select></label>
         <label class="example-field"><span data-i18n="example">Exemples du cours</span><select id="example"></select></label>
-        <label id="alphabetField"><span data-i18n="alphabet">Alphabet</span><input id="alphabet" value="ab" autocomplete="off"><small data-i18n="alphabetHelp">Caractères, sans séparateur ; les espaces sont ignorés.</small></label>
-        <label id="wordField"><span data-i18n="word">Mot</span><input id="word" value="aaba" autocomplete="off"><small data-i18n="wordHelp">Laisser vide pour le mot vide ε.</small></label>
-        <label id="statesField"><span data-i18n="startStates">États de départ</span><input id="states" value="0 1" autocomplete="off"><small data-i18n="statesHelp">Identifiants séparés par des espaces.</small></label>
+        <label id="alphabetField"><span><span data-i18n="alphabet">Alphabet</span> <span class="info" tabindex="0" role="img" data-i18n-tip="alphabetHelp">?</span></span><input id="alphabet" value="ab" autocomplete="off"></label>
+        <label id="wordField"><span><span data-i18n="word">Mot</span> <span class="info" tabindex="0" role="img" data-i18n-tip="wordHelp">?</span></span><input id="word" value="aaba" autocomplete="off"></label>
+        <label id="statesField"><span><span data-i18n="startStates">États de départ</span> <span class="info" tabindex="0" role="img" data-i18n-tip="statesHelp">?</span></span><input id="states" value="0 1" autocomplete="off"></label>
         <label id="stateIdField"><span data-i18n="stateId">Identifiant de l’état</span><input id="stateId" value="4" inputmode="numeric" autocomplete="off"></label>
         <label id="initialField" class="check"><input id="isInitial" type="checkbox"><span data-i18n="initial">Initial</span></label>
         <label id="finalField" class="check"><input id="isFinal" type="checkbox"><span data-i18n="final">Final</span></label>
         <label id="fromField"><span data-i18n="source">État source</span><input id="from" value="1" inputmode="numeric" autocomplete="off"></label>
         <label id="symbolField"><span data-i18n="symbol">Symbole</span><input id="symbol" value="b" autocomplete="off"></label>
         <label id="toField"><span data-i18n="destination">État destination</span><input id="to" value="3" inputmode="numeric" autocomplete="off"></label>
+        <div id="setupSummary" class="setup-summary" hidden></div>
+        <button id="setupToggle" type="button" class="setup-toggle" aria-controls="setupDetails" aria-expanded="true" hidden></button>
       </div>
-      <p class="example-note" id="exampleNote" hidden></p>
-      <p class="hint" data-i18n="automaticRun">La visualisation démarre au choix de l’opération et se met à jour lorsque vous quittez un champ modifié.</p>
-      <div class="editors">
+      <details class="example-note" id="exampleNote" hidden><summary><span class="note-label" data-i18n="exampleNoteTitle">Note du cours</span><span class="note-preview" id="exampleNotePreview"></span></summary><p id="exampleNoteText"></p></details>
+      <div id="examplePopup" class="example-popup" role="dialog" aria-labelledby="examplePopupTitle" hidden>
+        <span class="eyebrow" data-i18n="examplePopupEyebrow">POURQUOI CET EXEMPLE ?</span>
+        <h3 id="examplePopupTitle"></h3>
+        <p class="popup-op" id="examplePopupOp"></p>
+        <p id="examplePopupText"></p>
+        <p class="popup-hint" data-i18n="examplePopupHint">Déroulez l’algorithme avec ▶. Cette note reste accessible sous les menus.</p>
+        <div class="example-popup-actions"><button id="examplePopupClose" type="button" data-i18n="gotIt">Compris</button></div>
+      </div>
+      <div class="editors" id="setupDetails">
         <div class="editor" id="editorA">
-          <div class="editor-input"><label><span data-i18n="automatonA">Automate A</span><textarea id="autoA" spellcheck="false"></textarea></label><button id="previewButtonA" type="button" data-i18n="visualize">Visualiser</button></div>
-          <div class="preview" id="previewWrapA"><svg id="previewA" role="img" data-i18n-aria="previewA" aria-label="Aperçu de l’automate A"></svg><div class="preview-controls"><div class="zoom preview-zoom" role="group" data-i18n-aria="previewControlsA"><button id="previewZoomInA" type="button" data-i18n-aria="zoomIn" aria-label="Zoom avant" disabled>+</button><button id="previewZoomOutA" type="button" data-i18n-aria="zoomOut" aria-label="Zoom arrière" disabled>−</button><button id="previewResetA" type="button" data-i18n="recenter" disabled>Recentrer</button><button id="previewExpandA" type="button" aria-controls="previewWrapA" aria-expanded="false">Agrandir</button></div><div class="preview-tools" role="group" data-i18n-aria="editControlsA"><button id="addStateBtnA" type="button" data-i18n="addStateBtn">+ État</button><button id="addTransBtnA" type="button" data-i18n="addTransBtn">+ Transition</button></div></div><div id="popoverA" class="graph-popover" hidden></div><p id="previewStatusA" class="preview-status" aria-live="polite"></p></div>
+          <div class="editor-input"><label><span><span data-i18n="automatonA">Automate A</span> <span class="info" tabindex="0" role="img" data-i18n-tip="format">?</span></span><textarea id="autoA" spellcheck="false"></textarea></label><button id="previewButtonA" type="button" data-i18n="visualize">Visualiser</button></div>
+          <div class="preview" id="previewWrapA"><svg id="previewA" role="img" data-i18n-aria="previewA" aria-label="Aperçu de l’automate A"></svg>
+            <div class="graph-tools" role="group" data-i18n-aria="previewControlsA"><button id="previewZoomInA" type="button" data-icon="zoomIn" data-i18n-aria="zoomIn" aria-label="" title="" disabled></button><button id="previewZoomOutA" type="button" data-icon="zoomOut" data-i18n-aria="zoomOut" aria-label="" title="" disabled></button><button id="previewResetA" type="button" data-icon="recenter" data-i18n-aria="recenter" aria-label="" title="" disabled></button><button id="previewExpandA" type="button" data-icon="expand" aria-controls="previewWrapA" aria-expanded="false" aria-label="" title=""></button><span class="tools-sep" aria-hidden="true"></span><button id="addStateBtnA" type="button" data-icon="addState" data-i18n-aria="addStateLabel" aria-label="" title=""></button><button id="addTransBtnA" type="button" data-icon="addTrans" data-i18n-aria="addTransLabel" aria-label="" title=""></button><span class="info tip-left" tabindex="0" role="img" data-i18n-tip="editorHint">?</span></div>
+            <div id="popoverA" class="graph-popover" hidden></div><p id="previewStatusA" class="preview-status" aria-live="polite"></p></div>
         </div>
         <div class="editor" id="editorB">
-          <div class="editor-input"><label><span data-i18n="automatonB">Automate B</span><textarea id="autoB" spellcheck="false"></textarea></label><button id="previewButtonB" type="button" data-i18n="visualize">Visualiser</button></div>
-          <div class="preview" id="previewWrapB"><svg id="previewB" role="img" data-i18n-aria="previewB" aria-label="Aperçu de l’automate B"></svg><div class="preview-controls"><div class="zoom preview-zoom" role="group" data-i18n-aria="previewControlsB"><button id="previewZoomInB" type="button" data-i18n-aria="zoomIn" aria-label="Zoom avant" disabled>+</button><button id="previewZoomOutB" type="button" data-i18n-aria="zoomOut" aria-label="Zoom arrière" disabled>−</button><button id="previewResetB" type="button" data-i18n="recenter" disabled>Recentrer</button><button id="previewExpandB" type="button" aria-controls="previewWrapB" aria-expanded="false">Agrandir</button></div><div class="preview-tools" role="group" data-i18n-aria="editControlsB"><button id="addStateBtnB" type="button" data-i18n="addStateBtn">+ État</button><button id="addTransBtnB" type="button" data-i18n="addTransBtn">+ Transition</button></div></div><div id="popoverB" class="graph-popover" hidden></div><p id="previewStatusB" class="preview-status" aria-live="polite"></p></div>
+          <div class="editor-input"><label><span><span data-i18n="automatonB">Automate B</span> <span class="info" tabindex="0" role="img" data-i18n-tip="format">?</span></span><textarea id="autoB" spellcheck="false"></textarea></label><button id="previewButtonB" type="button" data-i18n="visualize">Visualiser</button></div>
+          <div class="preview" id="previewWrapB"><svg id="previewB" role="img" data-i18n-aria="previewB" aria-label="Aperçu de l’automate B"></svg>
+            <div class="graph-tools" role="group" data-i18n-aria="previewControlsB"><button id="previewZoomInB" type="button" data-icon="zoomIn" data-i18n-aria="zoomIn" aria-label="" title="" disabled></button><button id="previewZoomOutB" type="button" data-icon="zoomOut" data-i18n-aria="zoomOut" aria-label="" title="" disabled></button><button id="previewResetB" type="button" data-icon="recenter" data-i18n-aria="recenter" aria-label="" title="" disabled></button><button id="previewExpandB" type="button" data-icon="expand" aria-controls="previewWrapB" aria-expanded="false" aria-label="" title=""></button><span class="tools-sep" aria-hidden="true"></span><button id="addStateBtnB" type="button" data-icon="addState" data-i18n-aria="addStateLabel" aria-label="" title=""></button><button id="addTransBtnB" type="button" data-icon="addTrans" data-i18n-aria="addTransLabel" aria-label="" title=""></button><span class="info tip-left" tabindex="0" role="img" data-i18n-tip="editorHint">?</span></div>
+            <div id="popoverB" class="graph-popover" hidden></div><p id="previewStatusB" class="preview-status" aria-live="polite"></p></div>
         </div>
       </div>
-      <p class="hint" id="formatHint" data-i18n="format">Format du TME : #E: états, #I: initiaux, #F: finaux, #T: transitions (0 a 1). Identifiants entiers et symboles d’un caractère.</p>
       <div id="error" role="alert"></div>
     </section>
     <div class="workspace" id="workspace">
-      <section class="visual-panel">
-        <div class="panel-heading"><div><span class="eyebrow" data-i18n="visualization">VISUALISATION</span><h2 id="graphTitle"></h2></div><div class="legend"><span class="initial" data-i18n="legendInitial">→ initial</span><span class="final" data-i18n="legendFinal">◎ final</span><span class="active" data-i18n="legendActive">● en cours</span><span class="pending" data-i18n="legendPending">● à traiter</span><span class="marked" data-i18n="legendMarked">◌ ensemble calculé</span></div></div>
+      <section class="visual-panel" data-i18n-aria="visualization" aria-label="Visualisation">
         <div id="wordRibbon" class="word-ribbon" hidden></div>
         <div class="blackboard" id="blackboard">
           <div class="ref-board" id="refBoard" hidden>
             <div class="ref-card" id="refCardA">
-              <div class="board-card-head"><span id="refTitleA"></span><div class="zoom ref-zoom"><button id="refZoomInA" type="button" data-i18n-aria="zoomIn" aria-label="Zoom avant">+</button><button id="refZoomOutA" type="button" data-i18n-aria="zoomOut" aria-label="Zoom arrière">−</button><button id="refResetA" type="button" data-i18n="recenter">Recentrer</button></div></div>
+              <div class="board-card-head"><span id="refTitleA"></span></div>
               <svg id="refGraphA" role="img" data-i18n-aria="refInitialA" aria-label="Automate initial A"></svg>
+              <div class="graph-tools hover-tools" role="group" data-i18n-aria="refControlsA"><button id="refZoomInA" type="button" data-icon="zoomIn" data-i18n-aria="zoomIn" aria-label="" title=""></button><button id="refZoomOutA" type="button" data-icon="zoomOut" data-i18n-aria="zoomOut" aria-label="" title=""></button><button id="refResetA" type="button" data-icon="recenter" data-i18n-aria="recenter" aria-label="" title=""></button></div>
             </div>
             <div class="ref-card" id="refCardB" hidden>
-              <div class="board-card-head"><span id="refTitleB"></span><div class="zoom ref-zoom"><button id="refZoomInB" type="button" data-i18n-aria="zoomIn" aria-label="Zoom avant">+</button><button id="refZoomOutB" type="button" data-i18n-aria="zoomOut" aria-label="Zoom arrière">−</button><button id="refResetB" type="button" data-i18n="recenter">Recentrer</button></div></div>
+              <div class="board-card-head"><span id="refTitleB"></span></div>
               <svg id="refGraphB" role="img" data-i18n-aria="refInitialB" aria-label="Automate initial B"></svg>
+              <div class="graph-tools hover-tools" role="group" data-i18n-aria="refControlsB"><button id="refZoomInB" type="button" data-icon="zoomIn" data-i18n-aria="zoomIn" aria-label="" title=""></button><button id="refZoomOutB" type="button" data-icon="zoomOut" data-i18n-aria="zoomOut" aria-label="" title=""></button><button id="refResetB" type="button" data-icon="recenter" data-i18n-aria="recenter" aria-label="" title=""></button></div>
             </div>
           </div>
-          <div class="graph-wrap" id="graphWrap"><div class="board-card-head main-card-head" id="mainCardHead" hidden><span id="mainSubTitle" data-i18n="mainConstructed">Automate en construction</span></div><svg id="graph" role="img" data-i18n-aria="graph" aria-label="Graphe de l'automate"></svg><div class="zoom"><button id="zoomIn" data-i18n-aria="zoomIn" aria-label="Zoom avant" disabled>+</button><button id="zoomOut" data-i18n-aria="zoomOut" aria-label="Zoom arrière" disabled>−</button><button id="zoomReset" data-i18n="recenter" disabled>Recentrer</button><button id="relayout" data-i18n="relayout" disabled>Réorganiser</button><button id="graphExpand" type="button" aria-controls="graphWrap" aria-expanded="false">Agrandir</button></div><p class="drag-hint" data-i18n="dragHint">Glisser un état pour le déplacer, glisser le fond pour déplacer la vue, molette pour zoomer.</p></div>
+          <div class="graph-wrap" id="graphWrap"><div class="board-card-head main-card-head" id="mainCardHead" hidden><span id="mainSubTitle" data-i18n="mainConstructed">Automate en construction</span></div><svg id="graph" role="img" data-i18n-aria="graph" aria-label="Graphe de l'automate"></svg>
+            <div class="graph-tools" role="group" data-i18n-aria="graphControls"><button id="zoomIn" type="button" data-icon="zoomIn" data-i18n-aria="zoomIn" aria-label="" title="" disabled></button><button id="zoomOut" type="button" data-icon="zoomOut" data-i18n-aria="zoomOut" aria-label="" title="" disabled></button><button id="zoomReset" type="button" data-icon="recenter" data-i18n-aria="recenter" aria-label="" title="" disabled></button><button id="relayout" type="button" data-icon="relayout" data-i18n-aria="relayout" aria-label="" title="" disabled></button><button id="graphExpand" type="button" data-icon="expand" aria-controls="graphWrap" aria-expanded="false" aria-label="" title=""></button><span class="info tip-left" tabindex="0" role="img" data-i18n-tip="dragHint">?</span></div>
+            <div class="legend" id="legend" hidden><span class="initial" id="legendInitial" data-i18n="legendInitial">→ initial</span><span class="final" id="legendFinal" data-i18n="legendFinal">◎ final</span><span class="active" id="legendActive" data-i18n="legendActive">● en cours</span><span class="pending" id="legendPending" data-i18n="legendPending">● à traiter</span><span class="marked" id="legendMarked" data-i18n="legendMarked">◌ ensemble calculé</span></div>
+          </div>
         </div>
         <section id="boardTablePanel" class="board-table-panel" aria-labelledby="boardTableTitle" hidden>
           <div class="board-table-head"><h3 id="boardTableTitle"></h3><span id="boardTableMeta" class="board-table-meta"></span></div>
@@ -83,17 +99,28 @@
           <ul id="executionList"></ul>
           <p id="executionEmpty" data-i18n="noInitialExecution" hidden>Aucune exécution : l’automate n’a pas d’état initial.</p>
         </section>
-        <div class="message" id="message" aria-live="polite"></div>
-        <div class="player">
-          <button id="first" data-i18n-aria="first" title="Première étape" aria-label="Première étape" disabled>|◀</button><button id="prev" data-i18n-aria="prev" title="Étape précédente" aria-label="Étape précédente" disabled>◀</button><button id="play" title="Lecture" aria-label="Lecture" disabled>▶</button><button id="next" data-i18n-aria="next" title="Étape suivante" aria-label="Étape suivante" disabled>▶</button><button id="last" data-i18n-aria="last" title="Dernière étape" aria-label="Dernière étape" disabled>▶|</button>
-          <input id="timeline" type="range" min="0" max="0" value="0" data-i18n-aria="timeline" aria-label="Position dans les étapes" disabled>
-          <span id="counter"></span><label><span data-i18n="speed">Vitesse</span><input id="speed" type="range" min="1" max="10" value="5"></label>
-        </div><div class="reuse"><button id="useResult" data-i18n="useResult" hidden>Utiliser le résultat comme automate A</button><small id="reuseHint" data-i18n="reuseHint" hidden>Les états sont renumérotés pour respecter le format du TME.</small></div>
+        <div class="player-area">
+          <div class="message" id="message" aria-live="polite"></div>
+          <div class="player">
+            <button id="first" data-i18n-aria="first" title="Première étape" aria-label="Première étape" disabled>|◀</button><button id="prev" data-i18n-aria="prev" title="Étape précédente" aria-label="Étape précédente" disabled>◀</button><button id="play" title="Lecture" aria-label="Lecture" disabled>▶</button><button id="next" data-i18n-aria="next" title="Étape suivante" aria-label="Étape suivante" disabled>▶</button><button id="last" data-i18n-aria="last" title="Dernière étape" aria-label="Dernière étape" disabled>▶|</button>
+            <input id="timeline" type="range" min="0" max="0" value="0" data-i18n-aria="timeline" aria-label="Position dans les étapes" disabled>
+            <span id="counter"></span><label class="speed" title="Vitesse" data-i18n-aria="speed" aria-label="Vitesse"><span aria-hidden="true">⏱</span><input id="speed" type="range" min="1" max="10" value="5" data-i18n-aria="speed" aria-label="Vitesse"></label>
+            <button id="useResult" type="button" class="use-result" data-i18n="useResult" title="" hidden>Utiliser comme A</button>
+          </div>
+        </div>
       </section>
-      <aside class="code-panel"><span class="eyebrow" data-i18n="execution">EXÉCUTION</span><h2 data-i18n="pseudocode">Pseudo-code</h2>
-        <p class="stack-title"><span data-i18n="callStack">Algorithmes en cours</span> : <span id="callStack"></span></p>
-        <h3 id="listingTitle" class="listing-title"></h3><ol id="code"></ol>
-        <h3 data-i18n="log">Journal des étapes</h3><div id="log"></div></aside>
+      <aside class="code-panel">
+        <div class="tabs" role="tablist" data-i18n-aria="executionTabs" aria-label="Exécution">
+          <button id="tabCode" type="button" role="tab" aria-selected="true" aria-controls="panelCode" data-i18n="pseudocode">Pseudo-code</button><button id="tabLog" type="button" role="tab" aria-selected="false" aria-controls="panelLog" tabindex="-1"><span data-i18n="log">Journal</span> <span id="logCount" class="tab-count"></span></button>
+        </div>
+        <div id="panelCode" class="tab-panel" role="tabpanel" aria-labelledby="tabCode">
+          <p id="codeEmpty" class="code-empty" data-i18n="codeEmpty">Choisissez une opération ou un exemple pour suivre son pseudo-code.</p>
+          <p class="stack-title" id="stackLine" hidden><span data-i18n="callStack">Algorithmes en cours</span> : <span id="callStack"></span></p>
+          <h3 id="listingTitle" class="listing-title"></h3><ol id="code"></ol>
+          <div id="recentSteps" class="recent-steps" hidden><span class="recent-title" data-i18n="recentSteps">Étapes précédentes</span><div id="recentList"></div></div>
+        </div>
+        <div id="panelLog" class="tab-panel" role="tabpanel" aria-labelledby="tabLog" hidden><div id="log"></div></div>
+      </aside>
     </div>
   </main>
   <footer data-i18n="footer">© 2026 Amaury Curiel & Antoine Genitrini · GPL v3 · Inspiré du cours de mathématiques discrètes de Sorbonne Université.</footer>

@@ -73,7 +73,10 @@ Pour la reconnaissance, laisser le champ « Mot » vide pour tester ε.
 
 Le menu **Exemples du cours** charge l'un des exemples présentés en cours :
 il remplit les automates, l'alphabet ou le mot, choisit l'opération et lance
-la visualisation, en affichant une courte explication. Les exemples portent
+la visualisation. Une fenêtre **Pourquoi cet exemple ?** explique alors ce
+qu'il illustre ; une fois fermée (**Compris**, <kbd>Échap</kbd> ou clic
+ailleurs), l'explication reste disponible dans la ligne repliable **Note du
+cours** sous les menus. Les exemples portent
 sur le complémentaire (pourquoi l'automate doit être complet et déterministe,
 avec les pièges du calcul naïf du complémentaire), la déterminisation et
 l'intersection (dont les multiples de 2 et de 3 écrits en binaire).
@@ -81,27 +84,42 @@ l'intersection (dont les multiples de 2 et de 3 écrits en binaire).
 1. Choisir une opération : sa visualisation démarre automatiquement.
 2. Modifier l'automate A et, si l'opération le demande, l'automate B, soit dans
    le champ texte (**Visualiser** dessine l'automate saisi dans l'aperçu à droite),
-   soit directement dans l'aperçu graphique grâce aux boutons **+ État** et
-   **+ Transition** et en cliquant sur un état ou une transition pour modifier
-   son étiquette (chaque modification met à jour le texte).
+   soit directement dans l'aperçu graphique grâce aux boutons **Ajouter un état**
+   et **Ajouter une transition** de sa barre d'outils et en cliquant sur un état
+   ou une transition pour modifier son étiquette (chaque modification met à jour
+   le texte).
 3. Remplir les champs propres à l'opération. La visualisation est recalculée
    lorsque l'on quitte un champ modifié ; une case à cocher agit immédiatement.
 4. Utiliser le lecteur ou sélectionner une entrée du journal pour examiner une
    étape ; le message, la ligne de pseudo-code et le graphe sont synchronisés.
 
+Les consignes (format du TME, alphabet, mot…) sont regroupées dans les petits
+boutons **?** placés à côté des champs : leur texte apparaît au survol ou au
+focus clavier.
+
+Dès qu'une opération ou un exemple est choisi, la saisie **se replie** en une
+ligne : l'opération, l'exemple, et un résumé des données (nombre d'états et de
+transitions de A et B, alphabet, mot…). Cliquer sur un élément du résumé ou sur
+**Modifier les données** rouvre la saisie complète ; **Replier les données** la
+referme. Les automates de départ restent visibles dans la visualisation.
+
 Le lecteur propose première et dernière étape, pas précédent et suivant,
-lecture/pause, déplacement dans la chronologie et réglage de la vitesse.
+lecture/pause, déplacement dans la chronologie et réglage de la vitesse
+(⏱). Le message de l'étape en cours s'affiche juste au-dessus.
 Lorsque le focus n'est pas dans un champ ou un bouton, les touches
 <kbd>Espace</kbd>, <kbd>←</kbd> et <kbd>→</kbd> commandent la lecture.
 
 ### Pseudo-code
 
-Le panneau de droite présente l'algorithme **par grandes étapes**, en français
+Le panneau de droite comporte deux onglets : **Pseudo-code** et **Journal**
+(la liste de toutes les étapes, chacune cliquable). L'onglet Pseudo-code
+présente l'algorithme **par grandes étapes**, en français
 ou en anglais, et surligne l'étape en cours. Il ne reproduit volontairement pas
 le code Python du TME, que les étudiants doivent écrire eux-mêmes. Lorsqu'un
 algorithme en utilise un autre (par exemple le complémentaire, qui déterminise
 puis complète), la ligne **Algorithmes en cours** indique l'enchaînement et le
-pseudo-code affiché est celui de l'algorithme appelé.
+pseudo-code affiché est celui de l'algorithme appelé. Sous le pseudo-code, les
+deux **étapes précédentes** du journal rappellent ce qui vient de se passer.
 
 ### Graphe
 
@@ -112,6 +130,9 @@ pseudo-code affiché est celui de l'algorithme appelé.
 - un **anneau vert pointillé** entoure un ensemble d'états calculé (successeurs,
   états finaux, états déjà vus…) ;
 - pendant la minimisation, les couleurs de fond repèrent les classes.
+
+La légende, en bas du graphe, ne mentionne que les marques utilisées par
+l'opération en cours.
 
 Les états sont placés **de gauche à droite** selon leur distance aux états
 initiaux, comme le fait Graphviz dans le notebook. La position de chaque état
@@ -125,9 +146,12 @@ survol).
 
 On peut **faire glisser un état** pour améliorer le dessin ; la nouvelle
 position est conservée pendant toute la visualisation. **Réorganiser** rétablit
-la disposition calculée. La molette et les boutons `+` / `−` permettent de
+la disposition calculée. La molette et les boutons de zoom permettent de
 zoomer, un glisser sur le fond déplace la vue et **Recentrer** rétablit le
-cadrage. **Agrandir** donne davantage de place au graphe. Les aperçus de A et B
+cadrage. **Agrandir** donne davantage de place au graphe. Ces commandes sont
+des icônes dans le coin de chaque graphe (le nom de chacune apparaît au
+survol) ; sur les automates de référence, elles n'apparaissent qu'au survol.
+Les aperçus de A et B
 suivent les mêmes règles et mettent en évidence, pendant une construction, les
 états de l'automate de départ concernés (par exemple l'ensemble d'états
 représenté par l'état en cours de la déterminisation).
@@ -147,8 +171,8 @@ représenté par l'état en cours de la déterminisation).
   lettre). Deux états restent dans la même classe exactement quand leurs signatures
   coïncident.
 
-Après une construction ou une transformation, **Utiliser le résultat comme
-automate A** copie l'automate obtenu dans le champ A. Ses états sont
+Après une construction ou une transformation, le bouton **Utiliser comme A**,
+qui apparaît à la dernière étape, copie l'automate obtenu dans le champ A. Ses états sont
 renumérotés pour respecter le format de saisie ; il faut ensuite choisir
 l'opération suivante, même si c'est la même. Une erreur de saisie est affichée
 et la visualisation précédente reste visible.

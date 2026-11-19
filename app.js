@@ -6,6 +6,18 @@
   const Layout = AutomataLayout, I18N = AutomataI18n, Pseudo = AutomataPseudo, Examples = AutomataExamples;
   const partitionColors = ['#fee2e2', '#dcfce7', '#dbeafe', '#fef3c7', '#ede9fe', '#cffafe', '#ffedd5', '#fce7f3', '#e2e8f0', '#ecfccb'];
   const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const icons = {
+    zoomIn: '<circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14M5 7h4M7 5v4"/>',
+    zoomOut: '<circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14M5 7h4"/>',
+    recenter: '<circle cx="8" cy="8" r="2"/><path d="M8 1.5v3M8 11.5v3M1.5 8h3M11.5 8h3"/>',
+    relayout: '<path d="M13 8a5 5 0 1 1-1.6-3.7"/><path d="M13 2.5v3h-3"/>',
+    expand: '<path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/>',
+    collapse: '<path d="M13.5 6.5h-4v-4M2.5 9.5h4v4M9.5 6.5 14 2M6.5 9.5 2 14"/>',
+    addState: '<circle cx="7" cy="9" r="4.5"/><path d="M13 1.5v4M11 3.5h4"/>',
+    addTrans: '<path d="M1.5 11h9"/><path d="m8 8.5 2.5 2.5L8 13.5"/><path d="M13 1.5v4M11 3.5h4"/>'
+  };
+  const setIcon = (button, name) => { button.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true">${icons[name]}</svg>`; };
+  document.querySelectorAll('[data-icon]').forEach(button => setIcon(button, button.dataset.icon));
 
   const sampleA = '#E: 0 1 2 3\n#I: 0\n#F: 3\n#T: (0 a 0)\n(0 b 0)\n(0 a 1)\n(1 a 2)\n(2 a 3)\n(3 a 3)\n(3 b 3)';
   const sampleB = '#E: 0 1 2\n#I: 0\n#F: 2\n#T: (0 a 0) (0 b 1) (1 a 2) (1 b 2) (2 a 0) (2 b 1)';
@@ -738,8 +750,9 @@
   }
   function showExampleNote() {
     const ex = Examples.examples.find(e => e.id === $('example').value);
+    const note = ex ? ex.note[lang === 'en' ? 1 : 0] : '';
     $('exampleNote').hidden = !ex;
-    $('exampleNote').textContent = ex ? ex.note[lang === 'en' ? 1 : 0] : '';
+    $('exampleNoteText').textContent = note; $('exampleNotePreview').textContent = note;
   }
   function loadExample(id) {
     const ex = Examples.examples.find(e => e.id === id);
@@ -754,7 +767,38 @@
     showExampleNote();
     showFields();
     showPreview('A'); if (ex.b) showPreview('B');
-    launch();
+    setCompact(launch());
+    openExamplePopup(ex.id);
+  }
+
+  /* Fenêtre d'explication affichée au choix d'un exemple du cours */
+  let popupExample = null;
+  function fillExamplePopup() {
+    const ex = Examples.examples.find(e => e.id === popupExample);
+    if (!ex) return;
+    const li = lang === 'en' ? 1 : 0;
+    $('examplePopupTitle').textContent = ex.title[li];
+    $('examplePopupOp').textContent = text('examplePopupOp').replace('{op}', I18N.operations[lang][ex.op]);
+    $('examplePopupText').textContent = ex.note[li];
+  }
+  function placeExamplePopup() {
+    const popup = $('examplePopup'), field = $('example'), setup = $('setup');
+    const s = setup.getBoundingClientRect(), f = field.getBoundingClientRect();
+    const left = Math.max(16, Math.min(f.left - s.left, s.width - popup.offsetWidth - 16));
+    popup.style.left = `${left}px`; popup.style.top = `${f.bottom - s.top + 10}px`;
+    popup.style.setProperty('--arrow', `${Math.max(14, Math.min(popup.offsetWidth - 26, f.left - s.left - left + 30))}px`);
+  }
+  function openExamplePopup(id) {
+    popupExample = id;
+    fillExamplePopup();
+    $('examplePopup').hidden = false;
+    placeExamplePopup();
+    $('examplePopupClose').focus({ preventScroll: true });
+  }
+  function closeExamplePopup(restoreFocus) {
+    if ($('examplePopup').hidden) return;
+    $('examplePopup').hidden = true; popupExample = null;
+    if (restoreFocus) $('example').focus();
   }
   function showFields() {
     const op = $('operation').value, meta = Automata.operations[op] || { fields: [] }, has = f => meta.fields.includes(f);
@@ -786,17 +830,84 @@
       views.main.custom = false; views.main.sceneKey = null;
       views.refA.custom = false; views.refA.sceneKey = null;
       views.refB.custom = false; views.refB.sceneKey = null;
-      $('useResult').hidden = !run.result; $('reuseHint').hidden = !run.result;
+      updateLegend();
       buildLog();
       $('timeline').max = run.frames.length - 1;
       for (const id of ['first', 'prev', 'play', 'next', 'last', 'timeline', 'zoomIn', 'zoomOut', 'zoomReset', 'relayout']) $(id).disabled = false;
       codeKey = null;
       display(0, false);
+      updateSetupMode();
+      return true;
     } catch (error) {
       if (!(error instanceof Automata.AutomatonError)) console.error(error);
       lastError = error;
       showError();
+      setCompact(false);
+      return false;
     }
+  }
+
+  /* Mode exécution : la saisie se replie en une ligne de résumé */
+  let setupCompact = false;
+  const canCompact = () => Boolean(run && $('operation').value);
+  function setCompact(compact) {
+    setupCompact = Boolean(compact) && canCompact();
+    for (const which of ['A', 'B']) { closePopover(which); if (setupCompact) setTransMode(which, false); }
+    updateSetupMode();
+  }
+  function updateSetupMode() {
+    if (setupCompact && !canCompact()) setupCompact = false;
+    $('setup').classList.toggle('compact', setupCompact);
+    const toggle = $('setupToggle');
+    toggle.hidden = !canCompact();
+    toggle.textContent = text(setupCompact ? 'editData' : 'hideData');
+    toggle.setAttribute('aria-expanded', String(!setupCompact));
+    $('setupSummary').hidden = !setupCompact;
+    if (setupCompact) renderSummary();
+  }
+  function renderSummary() {
+    const box = $('setupSummary'), meta = Automata.operations[$('operation').value];
+    box.replaceChildren();
+    if (!meta) return;
+    const chip = (badge, value, focusId) => {
+      const button = document.createElement('button');
+      button.type = 'button'; button.className = `summary-chip${badge ? '' : ' plain'}`;
+      if (badge) { const b = document.createElement('b'); b.textContent = badge; button.appendChild(b); }
+      button.appendChild(document.createTextNode(value));
+      button.title = text('summaryEdit').replace('{x}', badge ? text(`automaton${badge}`) : value);
+      button.addEventListener('click', () => { setCompact(false); $(focusId).focus(); });
+      box.appendChild(button);
+    };
+    for (const which of meta.fields.includes('B') ? ['A', 'B'] : ['A']) {
+      const g = previews[which].graph;
+      chip(which, g ? text('summaryAutomaton').replace('{n}', g.states.length).replace('{t}', g.transitions.length) : '—', `auto${which}`);
+    }
+    const fields = [['alphabet', 'alphabet', 'alphabet'], ['word', 'word', 'word'], ['states', 'startStates', 'states'], ['stateId', 'stateId', 'stateId'],
+      ['initial', 'initial', 'isInitial'], ['final', 'final', 'isFinal'], ['from', 'source', 'from'], ['symbol', 'symbol', 'symbol'], ['to', 'destination', 'to']];
+    for (const [field, label, id] of fields) {
+      if (!meta.fields.includes(field)) continue;
+      const input = $(id);
+      const value = input.type === 'checkbox' ? (input.checked ? '✓' : '✗') : (input.value.trim() || (field === 'word' ? 'ε' : '—'));
+      chip(null, `${text(label)} : ${value}`, id);
+    }
+  }
+
+  /* Légende : seules les marques utilisées par l'exécution en cours */
+  function updateLegend() {
+    const use = { Initial: false, Final: false, Active: false, Pending: false, Marked: false };
+    const scan = (graph, item) => {
+      if (graph) for (const st of graph.states) { if (st.initial) use.Initial = true; if (st.final) use.Final = true; }
+      if (!item) return;
+      if (item.active && item.active.length) use.Active = true;
+      if (Array.isArray(item.pending) && item.pending.length) use.Pending = true;
+      if (item.marked && item.marked.length) use.Marked = true;
+    };
+    for (const f of run.frames) {
+      scan(f.graph, f);
+      if (f.ref) for (const which of ['A', 'B']) if (f.ref[which]) scan(f.ref[which].graph, f.ref[which]);
+    }
+    for (const [key, used] of Object.entries(use)) $(`legend${key}`).hidden = !used;
+    $('legend').hidden = !Object.values(use).some(Boolean);
   }
   function showError() {
     $('error').textContent = lastError ? `${errorText(lastError)}${run ? ` ${text('previous')}` : ''}` : '';
@@ -852,21 +963,39 @@
     for (const which of ['A', 'B']) if (previews[which].graph) views[which].highlight(f.src && f.src[which]);
     messageOverride = null;
     $('message').textContent = msg(f.msg);
-    $('graphTitle').textContent = I18N.operations[lang][run.op];
     $('counter').textContent = `${index + 1} / ${run.frames.length}`;
+    $('logCount').textContent = `(${index + 1}/${run.frames.length})`;
+    const atEnd = index === run.frames.length - 1;
+    $('useResult').hidden = !(run.result && atEnd);
     $('timeline').value = index;
     renderCode(f);
     const buttons = $('log').children;
     if (buttons[previous]) buttons[previous].classList.remove('current');
     const current = buttons[index];
-    if (current) {
-      current.classList.add('current');
-      const log = $('log'), top = current.offsetTop;
-      if (top < log.scrollTop || top + current.offsetHeight > log.scrollTop + log.clientHeight) log.scrollTop = top - log.clientHeight / 2;
-    }
+    if (current) current.classList.add('current');
+    scrollLogToCurrent();
+    renderRecent();
     renderBoard(f); renderPartition(f); renderExecutions(f);
   }
 
+  function scrollLogToCurrent() {
+    const log = $('log'), current = log.children[index];
+    if (!current || $('panelLog').hidden) return;
+    const top = current.offsetTop;
+    if (top < log.scrollTop || top + current.offsetHeight > log.scrollTop + log.clientHeight) log.scrollTop = top - log.clientHeight / 2;
+  }
+  function renderRecent() {
+    const list = $('recentList');
+    list.replaceChildren();
+    for (let i = Math.max(0, index - 2); i < index; i++) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = `${i + 1}. ${msg(run.frames[i].msg)}`;
+      button.addEventListener('click', () => { pause(); display(i, false); });
+      list.appendChild(button);
+    }
+    $('recentSteps').hidden = index === 0;
+  }
   function renderCode(f) {
     const listing = Pseudo.listings[f.listing], li = lang === 'en' ? 1 : 0;
     const key = `${f.listing}:${lang}`;
@@ -876,6 +1005,8 @@
       $('code').replaceChildren(...listing.lines.map(line => { const item = document.createElement('li'); item.textContent = line[li]; return item; }));
     }
     [...$('code').children].forEach((item, n) => item.classList.toggle('current', n === f.line));
+    $('codeEmpty').hidden = true;
+    $('stackLine').hidden = f.stack.length < 2;
     $('callStack').textContent = f.stack.map(k => Pseudo.listings[k].title[li]).join(' ▸ ');
   }
 
@@ -1160,7 +1291,7 @@
    * --------------------------------------------------------------- */
   function updateExpandButton(button, expanded) {
     const label = text(expanded ? 'collapseView' : 'expandView');
-    button.textContent = label; button.title = label;
+    setIcon(button, expanded ? 'collapse' : 'expand'); button.title = label;
     button.setAttribute('aria-label', label); button.setAttribute('aria-expanded', String(expanded));
   }
   function applyLanguage() {
@@ -1173,8 +1304,12 @@
       const label = text(node.dataset.i18nAria); node.setAttribute('aria-label', label);
       if (node.hasAttribute('title')) node.title = label;
     });
+    document.querySelectorAll('[data-i18n-tip]').forEach(node => { const tip = text(node.dataset.i18nTip); node.dataset.tip = tip; node.setAttribute('aria-label', tip); });
+    $('useResult').title = text('reuseHint');
     populateOperations();
     populateExamples();
+    updateSetupMode();
+    if (popupExample) { fillExamplePopup(); placeExamplePopup(); }
     $('languageText').textContent = lang === 'fr' ? 'EN' : 'FR';
     $('flagEN').toggleAttribute('hidden', lang !== 'fr');
     $('flagFR').toggleAttribute('hidden', lang !== 'en');
@@ -1196,7 +1331,30 @@
   /* ---------------------------------------------------------------
    * Événements
    * --------------------------------------------------------------- */
-  $('operation').addEventListener('change', () => { showFields(); launch(); });
+  $('operation').addEventListener('change', () => { showFields(); setCompact(launch()); });
+  $('setupToggle').addEventListener('click', () => { closeExamplePopup(false); setCompact(!setupCompact); placeExamplePopupIfOpen(); });
+  $('examplePopupClose').addEventListener('click', () => closeExamplePopup(true));
+  document.addEventListener('pointerdown', e => { if (!$('examplePopup').hidden && !$('examplePopup').contains(e.target) && e.target !== $('example')) closeExamplePopup(false); });
+  function placeExamplePopupIfOpen() { if (!$('examplePopup').hidden) placeExamplePopup(); }
+  window.addEventListener('resize', placeExamplePopupIfOpen);
+  const tabs = [$('tabCode'), $('tabLog')];
+  function selectTab(tab, focus) {
+    for (const t of tabs) {
+      const on = t === tab;
+      t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1;
+      $(t.getAttribute('aria-controls')).hidden = !on;
+    }
+    if (focus) tab.focus();
+    if (tab === $('tabLog')) scrollLogToCurrent();
+  }
+  for (const tab of tabs) {
+    tab.addEventListener('click', () => selectTab(tab, false));
+    tab.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault(); e.stopPropagation();
+      selectTab(tabs[(tabs.indexOf(tab) + 1) % tabs.length], true);
+    });
+  }
   $('example').addEventListener('change', event => loadExample(event.target.value));
   for (const id of ['autoA', 'autoB', 'alphabet', 'word', 'states', 'symbol', 'stateId', 'isInitial', 'isFinal', 'from', 'to']) {
     $(id).addEventListener('change', () => {
@@ -1267,13 +1425,15 @@
     showPreview('A');
     $('operation').value = '';
     showFields();
-    $('useResult').hidden = true; $('reuseHint').hidden = true;
+    $('useResult').hidden = true;
+    setCompact(false);
     $('autoA').focus();
     lastError = null; showError();
     messageOverride = 'copied'; $('message').textContent = text('copied');
   });
   document.addEventListener('keydown', e => {
     if ($('helpDialog').open) { if (e.key === 'Escape') { e.preventDefault(); $('helpDialog').close(); } return; }
+    if (e.key === 'Escape' && !$('examplePopup').hidden) { e.preventDefault(); closeExamplePopup(true); return; }
     if (e.key === 'Escape') { for (const k of ['A', 'B']) { closePopover(k); setTransMode(k, false); } }
     if (!run || /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(e.target.tagName)) return;
     if (e.key === ' ') { e.preventDefault(); play(); }
