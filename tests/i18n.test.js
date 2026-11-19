@@ -21,7 +21,7 @@ test('les messages ont les mêmes paramètres en français et en anglais', () =>
 
 test('les messages utilisés par le moteur existent', () => {
   const source = fs.readFileSync(path.join(__dirname, '..', 'automata.js'), 'utf8');
-  for (const [, key] of source.matchAll(/'((?:ret|addState|removeState|addTransition|removeTransition|succ|acc|isdet|iscomp|comp|det|compl|prod|union|concat|plus|star|min|quot|err)\.\w+)'/g))
+  for (const [, key] of source.matchAll(/'((?:ret|addState|removeState|addTransition|removeTransition|succ|acc|isdet|iscomp|comp|det|compl|naive|prod|union|concat|plus|star|min|quot|err)\.\w+)'/g))
     assert.ok(i18n.messages[key], key);
 });
 

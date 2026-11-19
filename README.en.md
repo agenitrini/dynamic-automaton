@@ -186,6 +186,7 @@ star).
 | Remove a transition | Source, symbol and destination of an existing transition |
 | Successors of a set | Space-separated starting states and the symbol to follow |
 | Recognize a word | Set of reached states after each letter, then acceptance or rejection |
+| Naive complement (pitfall), then test a word | Direct swap of final and non-final states, without determinizing or completing, then recognition of the word on the resulting automaton, with the original automaton still displayed; shows why this computation is wrong |
 | Test determinism | One initial state and at most one successor per state and symbol |
 | Test completeness | A transition for each letter of the alphabet, on reachable states |
 

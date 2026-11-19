@@ -23,9 +23,14 @@ test('les exemples sont bien formés et s’exécutent', () => {
 });
 
 test('les pièges du complémentaire donnent le résultat annoncé', () => {
-  assert.equal(wordAccepted(parse(byId('complIncompleteNaive').a), 'aa'), false);
+  /* on part de l'automate d'origine : il reconnaît bien le mot opposé */
+  assert.equal(wordAccepted(parse(byId('complIncompleteNaive').a), 'aba'), true);
   assert.equal(wordAccepted(parse(byId('complNondetAbaNaive').a), 'aba'), true);
   assert.equal(wordAccepted(parse(byId('complNondetANaive').a), 'a'), true);
+  /* après l'échange naïf : résultat faux annoncé dans la note */
+  assert.equal(exec(byId('complIncompleteNaive')).value, false);
+  assert.equal(exec(byId('complNondetAbaNaive')).value, true);
+  assert.equal(exec(byId('complNondetANaive')).value, true);
 });
 
 test('le complémentaire calculé est correct', () => {

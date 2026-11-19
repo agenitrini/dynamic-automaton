@@ -22,12 +22,11 @@
       ],
     },
     {
-      id: 'complIncompleteNaive', group: 'complement', op: 'accept', word: 'aa',
-      a: '#E: 1 2 3 4\n#I: 1\n#F: 1 2 3\n#T: (1 a 2)\n(2 b 3)\n(3 a 4)',
+      id: 'complIncompleteNaive', group: 'complement', op: 'naiveComplement', a: abaChain, word: 'aa',
       title: ['Piège : calcul naïf du complémentaire de {aba}, mot aa', 'Pitfall: naive swap for {aba}, word aa'],
       note: [
-        'États finaux et non finaux ont été échangés sans compléter l’automate. Le mot aa, qui devrait être accepté par le complémentaire, se bloque.',
-        'Final and non-final states were swapped without completing the automaton. The word aa, which the complement should accept, gets stuck.',
+        'On part de l’automate qui reconnaît {aba}, puis on échange ses états finaux et non finaux sans le compléter. Le mot aa appartient pourtant au complémentaire, mais il se bloque dès la deuxième lettre : il n’existe pas de transition a depuis 2. D’où la complétion préalable.',
+        'We start from the automaton recognizing {aba}, then swap its final and non-final states without completing it. The word aa belongs to the complement, yet it gets stuck on the second letter: there is no a-transition from 2. Hence completing first.',
       ],
     },
     {
@@ -39,12 +38,11 @@
       ],
     },
     {
-      id: 'complNondetAbaNaive', group: 'complement', op: 'accept', word: 'aba',
-      a: '#E: 1 2 3 4\n#I: 1\n#F: 1 2 3\n#T: (1 a 1)\n(1 b 1)\n(1 a 2)\n(2 b 3)\n(3 a 4)',
+      id: 'complNondetAbaNaive', group: 'complement', op: 'naiveComplement', a: endsWithAba, word: 'aba',
       title: ['Piège : calcul naïf du complémentaire, mot aba', 'Pitfall: naive swap, word aba'],
       note: [
-        'Calcul naïf du complémentaire (échange des états finaux) sur l’automate non déterministe : le mot aba est accepté (par l’exécution qui reste dans l’état 1) alors qu’il se termine par aba.',
-        'Swapping final states on the nondeterministic automaton: the word aba is accepted (by the run that stays in state 1) although it ends with aba.',
+        'On part de l’automate non déterministe des mots finissant par aba, puis on échange ses états finaux et non finaux. Le mot aba est alors accepté (par l’exécution qui reste dans l’état 1) alors qu’il se termine par aba : il faut déterminiser avant d’échanger.',
+        'We start from the nondeterministic automaton of words ending with aba, then swap its final and non-final states. The word aba is then accepted (by the run that stays in state 1) although it ends with aba: determinize before swapping.',
       ],
     },
     {
@@ -56,12 +54,11 @@
       ],
     },
     {
-      id: 'complNondetANaive', group: 'complement', op: 'accept', word: 'a',
-      a: '#E: 1 2\n#I: 1\n#F: 1\n#T: (1 a 1)\n(1 b 1)\n(1 a 2)\n(2 a 2)\n(2 b 2)',
+      id: 'complNondetANaive', group: 'complement', op: 'naiveComplement', a: containsA, word: 'a',
       title: ['Piège : calcul naïf du complémentaire de A*{a}A*, mot a', 'Pitfall: naive swap for A*{a}A*, word a'],
       note: [
-        'Calcul naïf du complémentaire (échange des états finaux) sans déterminiser : le mot a est accepté alors qu’il n’appartient pas à {b}*.',
-        'Swapping final states without determinizing: the word a is accepted although it does not belong to {b}*.',
+        'On part de l’automate non déterministe des mots contenant a, puis on échange ses états finaux et non finaux sans déterminiser. Le mot a est accepté (exécution qui reste en 1) alors qu’il n’appartient pas au complémentaire {b}*.',
+        'We start from the nondeterministic automaton of words containing a, then swap its final and non-final states without determinizing. The word a is accepted (run staying in 1) although it does not belong to the complement {b}*.',
       ],
     },
     {

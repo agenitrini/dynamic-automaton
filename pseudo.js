@@ -67,6 +67,15 @@
         ['accepter si E contient un état final', 'accept if E contains a final state', 'r.fin r.true r.false']
       ]
     },
+    naiveComplement: {
+      title: ['Complémentaire naïf (piège), puis reconnaissance', 'Naive complement (pitfall), then recognition'], fns: { m: 'complementNaif' },
+      lines: [
+        ['copier l’automate, sans le déterminiser ni le compléter', 'copy the automaton, without determinizing or completing it', 'm.copy'],
+        ['pour chaque état : échanger final et non final', 'for each state: swap final and non-final', 'm.S m.loop m.flip m.swapped'],
+        ['tester si le mot est reconnu par l’automate obtenu', 'test whether the word is recognized by the resulting automaton', 'm.test'],
+        ['renvoyer le résultat de la reconnaissance', 'return the recognition result', 'm.ret']
+      ]
+    },
     isDet: {
       title: ['Test du déterminisme', 'Determinism test'], fns: { m: 'estDeterministe' },
       lines: [

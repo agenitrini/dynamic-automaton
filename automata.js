@@ -87,7 +87,7 @@
   /* ---------- trace ---------- */
   class Tracer {
     constructor() {
-      this.frames = []; this.stack = []; this.view = null; this.scene = 'main'; this.muted = 0;
+      this.frames = []; this.stack = []; this.view = null; this.scene = 'main'; this.muted = 0; this.ref = null;
       this.cache = new WeakMap();
     }
     call(fn) {
@@ -122,7 +122,7 @@
         graph: this.snapshot(o.view || this.view), scene: o.scene || this.scene,
         active: o.active || [], marked: o.marked || [], pending: o.pending || null, edges: o.edges || [],
         groups: o.groups || [], src: o.src || null, execution: o.execution || null,
-        partition: o.partition || null, ref: o.ref || null, board: o.board || null
+        partition: o.partition || null, ref: o.ref || this.ref || null, board: o.board || null
       });
     }
   }
@@ -624,6 +624,35 @@
     T.ret(); return A;
   }
 
+  /* Piège du cours : échanger directement finaux et non finaux, puis tester un mot
+   * sur l'automate obtenu (sans déterminiser ni compléter au préalable). */
+  function complementNaif(T, g, word) {
+    T.call('complementNaif');
+    const gSnap = T.snapshot(g), mot = py.str(word.join(''));
+    const A = G.copy(g);
+    T.show(A, 'naive');
+    const ref = () => (T.muted ? null : { A: { titleKey: 'refInitialA', graph: gSnap } });
+    T.step('copy', ['naive.copy'], { ref: ref() });
+    const S = G.states(A);
+    const rows = S.map(s => ({ id: s.id, label: s.label, before: s.final, after: s.final, flipped: false }));
+    const rowMap = new Map(rows.map(r => [r.id, r]));
+    const board = (activeRow = null) => (T.muted ? null : { kind: 'complTable', activeRow, rows: rows.map(r => ({ ...r })) });
+    T.step('S', ['compl.flipAll'], { pending: ids(S), ref: ref(), board: board() });
+    S.forEach((s, k) => {
+      T.step('loop', ['compl.state', { s: s.label }], { active: [s.id], pending: ids(S.slice(k + 1)), ref: ref(), board: board(s.id) });
+      s.final = !s.final; G.touch(A);
+      const r = rowMap.get(s.id); r.after = s.final; r.flipped = true;
+      T.step('flip', [s.final ? 'compl.nowFinal' : 'compl.nowNotFinal', { s: s.label }], { active: [s.id], pending: ids(S.slice(k + 1)), ref: ref(), board: board(s.id) });
+    });
+    T.step('swapped', ['naive.swapped'], { ref: ref(), board: board() });
+    T.step('test', ['naive.test', { mot }], { ref: ref() });
+    T.ref = ref();
+    const r = accepte(T, A, word);
+    T.ref = null;
+    T.step('ret', [r ? 'naive.accepted' : 'naive.rejected', { mot }], { ref: ref() });
+    T.ret(); return r;
+  }
+
   function productInit(T, A, gA, gB, list, Etats, isUnion, ctx) {
     const Ini0 = G.initials(gA), Ini1 = G.initials(gB);
     const { prodRef, prodBoard, tableRows, rowMap } = ctx;
@@ -1056,6 +1085,7 @@
     removeTransition: { group: 'construction', fields: ['from', 'symbol', 'to'], listing: 'removeTransition' },
     successors: { group: 'tests', fields: ['states', 'symbol'], listing: 'succ' },
     accept: { group: 'tests', fields: ['word'], listing: 'accept' },
+    naiveComplement: { group: 'tests', fields: ['word'], listing: 'naiveComplement' },
     deterministic: { group: 'tests', fields: [], listing: 'isDet' },
     completeTest: { group: 'tests', fields: ['alphabet'], listing: 'isComplete' },
     complete: { group: 'transformations', fields: ['alphabet'], listing: 'complete' },
@@ -1126,6 +1156,15 @@
         executionTrace = executionTree(A, word);
         T.show(A, 'A');
         value = accepte(T, A, word);
+        break;
+      }
+      case 'naiveComplement': {
+        const word = [...String(o.word || '')];
+        if (word.length > LIMITS.word) fail('err.wordTooLong', { n: LIMITS.word });
+        const swapped = G.copy(A);
+        for (const s of swapped.states) s.final = !s.final;
+        executionTrace = executionTree(swapped, word);
+        value = complementNaif(T, A, word);
         break;
       }
       case 'deterministic': T.show(A, 'A'); value = estDeterministe(T, A); break;

@@ -194,6 +194,7 @@ l'étoile).
 | Supprimer une transition | Source, symbole et destination d'une transition existante |
 | Successeurs d'un ensemble | États de départ séparés par des espaces et symbole à suivre |
 | Reconnaissance d'un mot | Ensemble des états atteints après chaque lettre, puis acceptation ou refus |
+| Complémentaire naïf (piège) puis test d'un mot | Échange direct des états finaux et non finaux, sans déterminiser ni compléter, puis reconnaissance du mot sur l'automate obtenu, l'automate de départ restant affiché ; sert à montrer pourquoi ce calcul est faux |
 | Tester le déterminisme | Un seul état initial et au plus un successeur par état et symbole |
 | Tester la complétude | Une transition pour chaque lettre de l'alphabet, sur les états accessibles |
 

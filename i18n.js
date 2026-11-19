@@ -148,13 +148,13 @@
   const operations = {
     fr: {
       addState: 'Ajouter un état', removeState: 'Supprimer un état', addTransition: 'Ajouter une transition', removeTransition: 'Supprimer une transition',
-      successors: 'Successeurs d’un ensemble', accept: 'Reconnaissance d’un mot', deterministic: 'Tester le déterminisme', completeTest: 'Tester la complétude',
+      successors: 'Successeurs d’un ensemble', accept: 'Reconnaissance d’un mot', naiveComplement: 'Complémentaire naïf (piège) puis test d’un mot', deterministic: 'Tester le déterminisme', completeTest: 'Tester la complétude',
       complete: 'Compléter', determinize: 'Déterminiser', complement: 'Complémentaire', intersection: 'Intersection', union: 'Union',
       concat: 'Concaténation', plus: 'Itération positive', star: 'Étoile', minimize: 'Minimisation de Moore'
     },
     en: {
       addState: 'Add a state', removeState: 'Remove a state', addTransition: 'Add a transition', removeTransition: 'Remove a transition',
-      successors: 'Successors of a set', accept: 'Recognize a word', deterministic: 'Test determinism', completeTest: 'Test completeness',
+      successors: 'Successors of a set', accept: 'Recognize a word', naiveComplement: 'Naive complement (pitfall), then test a word', deterministic: 'Test determinism', completeTest: 'Test completeness',
       complete: 'Complete', determinize: 'Determinize', complement: 'Complement', intersection: 'Intersection', union: 'Union',
       concat: 'Concatenation', plus: 'Positive closure', star: 'Kleene star', minimize: 'Moore minimization'
     }
@@ -277,6 +277,11 @@
     'compl.state': ['État {s}.', 'State {s}.'],
     'compl.nowFinal': ['{s} devient final.', '{s} becomes final.'],
     'compl.nowNotFinal': ['{s} n’est plus final.', '{s} is no longer final.'],
+    'naive.copy': ['Copie de l’automate, sans le déterminiser ni le compléter.', 'Copying the automaton, without determinizing or completing it.'],
+    'naive.swapped': ['Finaux et non finaux échangés : voici le « complémentaire naïf ».', 'Final and non-final states swapped: this is the “naive complement”.'],
+    'naive.test': ['Test du mot {mot} sur l’automate obtenu.', 'Testing the word {mot} on the resulting automaton.'],
+    'naive.accepted': ['Le complémentaire naïf accepte {mot}.', 'The naive complement accepts {mot}.'],
+    'naive.rejected': ['Le complémentaire naïf refuse {mot}.', 'The naive complement rejects {mot}.'],
     'compl.done': ['Automate du complémentaire construit.', 'Complement automaton built.'],
 
     'prod.A': ['Le produit est initialement vide.', 'The product is initially empty.'],
