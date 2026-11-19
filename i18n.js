@@ -6,7 +6,7 @@
     fr: {
       course: 'MATHÉMATIQUES DISCRÈTES · AUTOMATES FINIS', title: 'Automates dynamiques',
       subtitle: 'Construire, parcourir et transformer les automates, un pas à la fois.',
-      help: 'Aide', helpTitle: 'Aide et documentation', close: 'Fermer',
+      help: 'Aide', home: '← Accueil', helpTitle: 'Aide et documentation', close: 'Fermer',
       setup: 'Données et opération', automatonA: 'Automate A', automatonB: 'Automate B', visualize: 'Visualiser',
       previewA: 'Aperçu de l’automate A', previewB: 'Aperçu de l’automate B',
       previewControlsA: 'Commandes de l’aperçu A', previewControlsB: 'Commandes de l’aperçu B',
@@ -76,7 +76,7 @@
     en: {
       course: 'DISCRETE MATHEMATICS · FINITE AUTOMATA', title: 'Dynamic Automata',
       subtitle: 'Build, explore and transform automata, one step at a time.',
-      help: 'Help', helpTitle: 'Help and documentation', close: 'Close',
+      help: 'Help', home: '← Home', helpTitle: 'Help and documentation', close: 'Close',
       setup: 'Input and operation', automatonA: 'Automaton A', automatonB: 'Automaton B', visualize: 'Visualize',
       previewA: 'Preview of automaton A', previewB: 'Preview of automaton B',
       previewControlsA: 'Controls for preview A', previewControlsB: 'Controls for preview B',

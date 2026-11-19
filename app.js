@@ -752,6 +752,7 @@
     const ex = Examples.examples.find(e => e.id === $('example').value);
     const note = ex ? ex.note[lang === 'en' ? 1 : 0] : '';
     $('exampleNote').hidden = !ex;
+    $('homeButton').hidden = !ex;
     $('exampleNoteText').textContent = note; $('exampleNotePreview').textContent = note;
   }
   function loadExample(id) {
@@ -1389,6 +1390,13 @@
     $(`refZoomOut${which}`).addEventListener('click', () => refView.zoom(1.25));
     $(`refReset${which}`).addEventListener('click', () => { refView.custom = false; refView.fit(true); });
   }
+  $('homeButton').addEventListener('click', () => {
+    /* Retour à l'accueil : rechargement de la page dans la langue courante */
+    const url = new URL(location.href);
+    if (url.searchParams.has('lang')) url.searchParams.set('lang', lang);
+    url.hash = '';
+    location.assign(url.href);
+  });
   $('helpOpen').addEventListener('click', () => { pause(); $('helpDialog').showModal(); });
   $('helpClose').addEventListener('click', () => $('helpDialog').close());
   $('helpContent').addEventListener('click', event => {

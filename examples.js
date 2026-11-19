@@ -64,7 +64,7 @@
     {
       id: 'detA10', group: 'determinize', op: 'determinize',
       a: '#E: 0 1 2 3\n#I: 0\n#F: 3\n#T: (0 a 1)\n(0 a 2)\n(0 b 0)\n(0 b 3)\n(1 b 1)\n(2 a 0)\n(2 a 3)\n(2 b 1)\n(2 b 2)\n(3 a 1)\n(3 a 2)\n(3 b 3)',
-      title: ['Automate A10', 'Automaton A10'],
+      title: ['Automate déterminisé à peu d’états', 'Determinized automaton with few states'],
       note: [
         'Construction des sous-ensembles : seuls {0}, {1, 2} et {0, 3} sont accessibles, l’automate déterministe obtenu a donc 3 états.',
         'Subset construction: only {0}, {1, 2} and {0, 3} are reachable, so the resulting deterministic automaton has 3 states.',
