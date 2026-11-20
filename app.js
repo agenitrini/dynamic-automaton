@@ -80,6 +80,7 @@
       const lay = Layout.layered(e.order.map(id => e.states.get(id)), trans);
       scenes.set(key, {
         pos: lay.pos, base: new Map([...lay.pos].map(([id, p]) => [id, { ...p }])), radius: lay.radius, layer: lay.layer,
+        links: [...new Set(trans.filter(t => t.from !== t.to).map(t => `${t.from}→${t.to}`))].map(k => k.split('→')),
         alphabet: [...new Set(trans.map(t => t.symbol))].sort()
       });
     }
@@ -105,6 +106,8 @@
       this.onEdgeDrag = options.onEdgeDrag || null;
       this.onBgClick = options.onBgClick || null;
       this.transDragMode = false;
+      /* recadrage quand la zone change de taille (fenêtre, plein écran) : la place des boutons dépend des proportions */
+      if (typeof ResizeObserver !== 'undefined') new ResizeObserver(() => { if (this.box && !this.custom && !this.drag) this.fit(false); }).observe(svg);
       const defs = el('defs', {}, svg);
       for (const [id, color] of [['arrow', '#68748e'], ['hot', '#d58216'], ['init', '#d54d65'], ['temp', '#5546d9']]) {
         const m = el('marker', { id: `${svg.id}-${id}`, viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 11, markerHeight: 11, markerUnits: 'userSpaceOnUse', orient: 'auto-start-reverse' }, defs);
@@ -238,15 +241,23 @@
       n.text.setAttribute('font-size', Math.max(9, Math.min(14, (r * 2 - 14) / Math.max(1, [...s.label].length) * 1.65)));
       n.title.textContent = `${s.label}${s.initial ? ' (init)' : ''}${s.final ? ' (fin)' : ''}`;
     }
+    obstacles(ids) { return ids.map(id => { const p = this.pos(id); return { id, x: p.x, y: p.y, r: this.radius(id) }; }); }
+    /* courbure d'un arc : celle des couches, accentuée pour contourner les autres états */
+    bend(from, to, reverse, nodes) {
+      const a = this.pos(from), b = this.pos(to);
+      const base = Layout.bendFor(this.layerOf(from), this.layerOf(to), a, b, reverse);
+      return Layout.routeBend(a, this.radius(from), b, this.radius(to), base, nodes.filter(o => o.id !== from && o.id !== to), reverse);
+    }
     placeAll() {
       for (const [id, n] of this.nodes) { const p = this.pos(id); n.g.setAttribute('transform', `translate(${p.x} ${p.y})`); }
+      const nodes = this.obstacles([...this.nodes.keys()]);
       for (const e of this.edges.values()) {
         const a = this.pos(e.from), ra = this.radius(e.from);
         let geo;
         if (e.from === e.to) geo = Layout.edgeGeometry(a, ra, a, ra, 0);
         else {
           const b = this.pos(e.to), rb = this.radius(e.to);
-          geo = Layout.edgeGeometry(a, ra, b, rb, Layout.bendFor(this.layerOf(e.from), this.layerOf(e.to), a, b, this.edges.has(`${e.to}→${e.from}`)));
+          geo = Layout.edgeGeometry(a, ra, b, rb, this.bend(e.from, e.to, this.edges.has(`${e.to}→${e.from}`), nodes));
         }
         let { lx, ly } = geo;
         if (geo.at) {
@@ -270,6 +281,16 @@
         x0 = Math.min(x0, p.x - r - 50); x1 = Math.max(x1, p.x + r + 24);
         y0 = Math.min(y0, p.y - r * 2.7 - 26); y1 = Math.max(y1, p.y + r + 26);
       }
+      /* sommet des arcs courbés (et leur étiquette) pour qu'aucun ne sorte du cadre */
+      const nodes = this.obstacles(ids), links = new Set(this.scene.links.map(([f, t]) => `${f}→${t}`));
+      for (const [from, to] of this.scene.links) {
+        if (!this.scene.pos.has(from) || !this.scene.pos.has(to)) continue;
+        const a = this.pos(from), b = this.pos(to), bend = this.bend(from, to, links.has(`${to}→${from}`), nodes);
+        const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+        const x = (a.x + b.x) / 2 + (b.y - a.y) / len * (bend / 2 + 18 * Math.sign(bend));
+        const y = (a.y + b.y) / 2 - (b.x - a.x) / len * (bend / 2 + 18 * Math.sign(bend));
+        x0 = Math.min(x0, x - 16); x1 = Math.max(x1, x + 16); y0 = Math.min(y0, y - 16); y1 = Math.max(y1, y + 16);
+      }
       let w = x1 - x0, h = y1 - y0;
       if (w < 420) { x0 -= (420 - w) / 2; w = 420; }
       if (h < 240) { y0 -= (240 - h) / 2; h = 240; }
@@ -280,8 +301,29 @@
       this.svg.setAttribute('viewBox', `${b.x} ${b.y} ${b.w} ${b.h}`);
       this.emptyText.setAttribute('x', b.x + b.w / 2); this.emptyText.setAttribute('y', b.y + b.h / 2);
     }
+    /*
+     * Agrandit le cadre pour que l'automate ne passe pas sous les éléments posés
+     * sur le graphe : colonne de boutons (bande de droite), rangée de boutons
+     * (bande du haut) et légende (bande du bas).
+     */
+    clearOfTools(b) {
+      const parent = this.svg.parentElement, box = this.svg.getBoundingClientRect();
+      if (!parent || !box.width || !box.height) return b;
+      const inset = { top: 0, right: 0, bottom: 0 };
+      for (const node of parent.querySelectorAll(':scope > .graph-tools, :scope > .legend')) {
+        const t = node.getBoundingClientRect();
+        if (!t.width || !t.height || node.hidden) continue;
+        if (node.classList.contains('legend')) inset.bottom = Math.max(inset.bottom, box.bottom - t.top + 4);
+        else if (t.height > t.width) inset.right = Math.max(inset.right, box.right - t.left + 6);
+        else inset.top = Math.max(inset.top, t.bottom - box.top + 6);
+      }
+      const W = box.width, H = box.height, w = W - inset.right, h = H - inset.top - inset.bottom;
+      if (w < W / 2 || h < H / 2) return b;
+      const k = Math.min(w / b.w, h / b.h);
+      return { x: b.x - (w / k - b.w) / 2, y: b.y - inset.top / k - (h / k - b.h) / 2, w: W / k, h: H / k };
+    }
     fit(animate) {
-      const target = this.bounds();
+      const target = this.clearOfTools(this.bounds());
       if (this.stopBox) this.stopBox();
       if (!animate || !this.box || reducedMotion()) { this.box = target; this.applyBox(); return; }
       const from = { ...this.box };

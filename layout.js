@@ -125,6 +125,42 @@
     return bend;
   }
 
+  /*
+   * Courbure finale d'un arc : on part de la courbure de base et on l'accentue
+   * (ou on change de côté) jusqu'à ce que l'arc ne traverse plus aucun autre état.
+   * obstacles : [{ x, y, r }] sans les extrémités de l'arc. keepSide impose le
+   * côté de la courbure (arc inverse présent : chacun garde son côté).
+   */
+  function routeBend(a, ra, b, rb, base, obstacles, keepSide) {
+    if (!obstacles.length) return base;
+    const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy) || 1, nx = dy / len, ny = -dx / len;
+    const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+    const cost = bend => {
+      const c = { x: mx + nx * bend, y: my + ny * bend };
+      let total = 0;
+      for (let k = 1; k < 24; k++) {
+        const p = quad(a, c, b, k / 24);
+        for (const o of obstacles) {
+          const gap = o.r + 14 - Math.hypot(p.x - o.x, p.y - o.y);
+          if (gap > 0) total += gap;
+        }
+      }
+      return total;
+    };
+    let best = base, bestCost = cost(base);
+    if (bestCost === 0) return base;
+    const own = base < 0 ? -1 : 1;
+    for (let step = 1; step <= 12; step++) {
+      const mag = Math.abs(base) + step * 24;
+      for (const sign of keepSide ? [own] : [own, -own]) {
+        const c = cost(sign * mag);
+        if (c === 0) return sign * mag;
+        if (c < bestCost) { best = sign * mag; bestCost = c; }
+      }
+    }
+    return best;
+  }
+
   /* Affichage compact des symboles d'un arc (alphabets de textes). */
   const display = c => (c === ' ' ? '␣' : c === '\n' ? '↵' : c === '\t' ? '⇥' : c === ',' ? '‘,’' : c);
   const classOf = c => (/[0-9]/.test(c) ? 'd' : /[a-z]/.test(c) ? 'l' : /[A-Z]/.test(c) ? 'u' : null);
@@ -149,7 +185,7 @@
     return complement.length < direct.length ? complement : direct;
   }
 
-  const api = { layered, edgeGeometry, bendFor, symbolLabel, radius, display };
+  const api = { layered, edgeGeometry, bendFor, routeBend, symbolLabel, radius, display };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.AutomataLayout = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);
